@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "751216866169",
+    "project_id": "scholarnexus-ca0ef",
+    "storage_bucket": "scholarnexus-ca0ef.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:751216866169:android:543e964f8980b3639735a8",
+        "android_client_info": {
+          "package_name": "com.example.my_prg"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDaIAxb-O83gBWuafYmHKLk14SbYEkrmhg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
