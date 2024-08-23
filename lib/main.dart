@@ -34,7 +34,9 @@ class MyApp extends StatelessWidget {
           case '/home':
             return MaterialPageRoute(builder: (context) => HomeScreen());
           case '/quiz':
-            return MaterialPageRoute(builder: (context) => QuizScreen(questionlenght: [], optionsList:null, topicType: ''));
+            return MaterialPageRoute(
+                builder: (context) => QuizScreen(
+                    questionlenght: [], optionsList: null, topicType: ''));
           case '/news':
             return MaterialPageRoute(builder: (context) => NewsScreen());
           default:
@@ -58,12 +60,11 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
 
-  final List<Widget> _widgetOptions = <Widget>[
-  HomeScreen(),
-  QuizScreen(questionlenght: [3], optionsList:4, topicType: '2'),
-  NewsScreen(),
-];
-
+  static List<Widget> _widgetOptions = <Widget>[
+    HomeScreen(),
+    QuizScreen(questionlenght: [3], optionsList: 4, topicType: '2'),
+    NewsScreen(),
+  ];
 
   void _onItemTapped(int index) {
     setState(() {
@@ -73,7 +74,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold (
+    return Scaffold(
       appBar: AppBar(
         title: Text('Scholar Nexus'),
         leading: IconButton(
