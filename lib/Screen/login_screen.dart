@@ -62,11 +62,17 @@ class _LoginScreenState extends State<LoginScreen> {
       accessToken: googleSignInAuthentication.accessToken,
       idToken: googleSignInAuthentication.idToken,
     );
+    // Show success message or navigate to another screen
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Sign in successful')),
+        );
 
     
     // Use the user object for further operations or navigate to a new screen.
   } catch (e) {
-    print(e.toString());
+    ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Sign in failed: $e')),
+      );
   }
 }
 
@@ -216,10 +222,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     GestureDetector(
-                      onTap: () {
-                        // Handle Google Sign-In
-                      },
-                      child: Container(
+                      
+                      
+                      child: 
+                      Container(
                         height: 50,
                         width: 50,
                         alignment: Alignment.center,
