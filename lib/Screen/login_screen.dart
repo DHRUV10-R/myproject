@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:my_prg/Screen/signup_screen.dart';
 import 'package:my_prg/Widgets/round_gradient_button.dart';
 import 'package:my_prg/Widgets/round_text_field.dart';
@@ -15,6 +16,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final GoogleSignIn googleSignIn = GoogleSignIn();
 
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passController = TextEditingController();
@@ -51,6 +53,24 @@ class _LoginScreenState extends State<LoginScreen> {
     }
     return null;
   }
+  Future<void> signInWithGoogle() async {
+  try {
+    final GoogleSignInAccount? googleSignInAccount = await googleSignIn.signIn();
+    final GoogleSignInAuthentication googleSignInAuthentication = await googleSignInAccount!.authentication;
+
+    final AuthCredential credential = GoogleAuthProvider.credential(
+      accessToken: googleSignInAuthentication.accessToken,
+      idToken: googleSignInAuthentication.idToken,
+    );
+
+    final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+    final User? user = userCredential.user;
+    
+    // Use the user object for further operations or navigate to a new screen.
+  } catch (e) {
+    print(e.toString());
+  }
+}
 
   @override
   Widget build(BuildContext context) {

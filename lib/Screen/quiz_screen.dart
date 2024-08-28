@@ -25,7 +25,7 @@ class _QuizScreenState extends State<QuizScreen> {
   int _questionNumber = 1;
   PageController _controller = PageController();
   int score = 0;
-  bool isLocked = false;
+  bool isLocked = true;
   List optionsLetters = ["A.", "B.", "C.", "D."];
 
   void startTimerOnQuestions() {
@@ -74,7 +74,6 @@ class _QuizScreenState extends State<QuizScreen> {
     }
   }
 
-  
   void initState() {
     super.initState();
     _controller = PageController(initialPage: 0);
@@ -82,13 +81,11 @@ class _QuizScreenState extends State<QuizScreen> {
     startTimerOnQuestions();
   }
 
-  
   void dispose() {
     _timer?.cancel();
     super.dispose();
   }
 
-  
   Widget build(BuildContext context) {
     const Color bgColor3 = Color(0xFF5170FD);
     const Color bgColor = Color(0xFF4993FA);
@@ -187,7 +184,7 @@ class _QuizScreenState extends State<QuizScreen> {
                               onPageChanged: (value) {
                                 setState(() {
                                   _questionNumber = value + 1;
-                                  isLocked = false;
+                                  isLocked = true;
                                   _resetQuestionLocks();
                                 });
                               },
