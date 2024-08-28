@@ -58,13 +58,11 @@ class _LoginScreenState extends State<LoginScreen> {
     final GoogleSignInAccount? googleSignInAccount = await googleSignIn.signIn();
     final GoogleSignInAuthentication googleSignInAuthentication = await googleSignInAccount!.authentication;
 
-    final AuthCredential credential = GoogleAuthProvider.credential(
+    GoogleAuthProvider.credential(
       accessToken: googleSignInAuthentication.accessToken,
       idToken: googleSignInAuthentication.idToken,
     );
 
-    final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
-    final User? user = userCredential.user;
     
     // Use the user object for further operations or navigate to a new screen.
   } catch (e) {

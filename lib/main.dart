@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'Screen/home_screen.dart';
 import 'Screen/login_screen.dart';
 import 'Screen/news_screen.dart';
-import 'Screen/quiz_screen.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -34,9 +33,8 @@ class MyApp extends StatelessWidget {
           case '/home':
             return MaterialPageRoute(builder: (context) => HomeScreen());
           case '/quiz':
-            return MaterialPageRoute(
-                builder: (context) => QuizScreen(
-                    questionlenght: [], optionsList: null, topicType: ''));
+            // return MaterialPageRoute(
+            //     builder: (context) => );
           case '/news':
             return MaterialPageRoute(builder: (context) => NewsScreen());
           default:
@@ -62,7 +60,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   static List<Widget> _widgetOptions = <Widget>[
     HomeScreen(),
-    QuizScreen(questionlenght: [3], optionsList: 4, topicType: '2'),
+    // QuizScreen(questionlenght: [3], optionsList: 4, topicType: '2'),
     NewsScreen(),
   ];
 

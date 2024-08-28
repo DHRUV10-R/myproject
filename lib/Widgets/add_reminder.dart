@@ -1,10 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:my_prg/models/remainder_model.dart';
 import 'package:my_prg/utils/app_colors.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import '../models_reminder/remainder_model.dart';
 
 addReminder(BuildContext context, String uid) {
   TimeOfDay time = TimeOfDay.now();

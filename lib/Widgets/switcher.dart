@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:my_prg/models/remainder_model.dart';
+
+import '../models_reminder/remainder_model.dart';
+
 
 // ignore: must_be_immutable
 class Switcher extends StatefulWidget {
