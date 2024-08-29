@@ -28,7 +28,8 @@ class _LoginScreenState extends State<LoginScreen> {
     super.initState();
   }
 
-  Future<User?> _signIn(BuildContext context, String email, String password) async {
+  Future<User?> _signIn(
+      BuildContext context, String email, String password) async {
     try {
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
         email: email,
@@ -40,7 +41,7 @@ class _LoginScreenState extends State<LoginScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) =>  MyHomePage(),
+            builder: (context) => MyHomePage(),
           ),
         );
       }
@@ -53,28 +54,57 @@ class _LoginScreenState extends State<LoginScreen> {
     }
     return null;
   }
+
   Future<void> signInWithGoogle() async {
   try {
+    // Trigger the Google Sign-In flow
     final GoogleSignInAccount? googleSignInAccount = await googleSignIn.signIn();
-    final GoogleSignInAuthentication googleSignInAuthentication = await googleSignInAccount!.authentication;
 
-    GoogleAuthProvider.credential(
+    // If the user cancels the sign-in process, return early
+    if (googleSignInAccount == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Sign in canceled')),
+      );
+      return;
+    }
+
+    // Obtain the authentication details from the request
+    final GoogleSignInAuthentication googleSignInAuthentication =
+        await googleSignInAccount.authentication;
+
+    // Create a new credential using the token
+    final AuthCredential credential = GoogleAuthProvider.credential(
       accessToken: googleSignInAuthentication.accessToken,
       idToken: googleSignInAuthentication.idToken,
     );
-    // Show success message or navigate to another screen
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Sign in successful')),
-        );
 
-    
-    // Use the user object for further operations or navigate to a new screen.
-  } catch (e) {
-    ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Sign in failed: $e')),
+    // Use the credential to sign in to Firebase
+    final UserCredential userCredential =
+        await _auth.signInWithCredential(credential);
+
+    // Get the signed-in user
+    final User? user = userCredential.user;
+
+    if (user != null) {
+      // If the sign-in was successful, navigate to the home page
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => MyHomePage(),
+        ),
       );
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Sign in successful')),
+      );
+    }
+  } catch (e) {
+    // If there is any error, display a message
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Sign in failed: $e')),
+    );
   }
 }
+
 
   @override
   Widget build(BuildContext context) {
@@ -158,7 +188,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       height: 20,
                       width: 20,
                       child: Image.asset(
-                        _isObscure ? "assets/icons/show_pwd.png" : "assets/icons/hide.png",
+                        _isObscure
+                            ? "assets/icons/show_pwd.png"
+                            : "assets/icons/hide.png",
                         width: 20,
                         height: 20,
                         fit: BoxFit.contain,
@@ -188,7 +220,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   title: "Login",
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      _signIn(context, _emailController.text, _passController.text);
+                      _signIn(
+                          context, _emailController.text, _passController.text);
                     }
                   },
                 ),
@@ -222,10 +255,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     GestureDetector(
-                      
-                      
-                      child: 
-                      Container(
+                      onTap: signInWithGoogle,
+                      child: Container(
                         height: 50,
                         width: 50,
                         alignment: Alignment.center,
