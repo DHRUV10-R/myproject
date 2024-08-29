@@ -1,4 +1,4 @@
-// // ignore_for_file: library_private_types_in_public_api
+// main.dart
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -7,6 +7,7 @@ import 'package:my_prg/Screen/quiz_screen.dart';
 import 'Screen/home_screen.dart';
 import 'Screen/login_screen.dart';
 import 'Screen/news_screen.dart';
+import 'Screen/profile_screen.dart'; 
 import 'firebase_options.dart';
 
 void main() async {
@@ -17,41 +18,80 @@ void main() async {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  bool _isDarkTheme = false;
+
+  void _toggleTheme() {
+    setState(() {
+      _isDarkTheme = !_isDarkTheme;
+    });
+  }
+
+  void _showAboutPage(BuildContext context) {
+    showAboutDialog(
+      context: context,
+      applicationName: 'Scholar Nexus',
+      applicationVersion: '1.0.0',
+      applicationIcon: Icon(Icons.school, size: 50),
+      children: [
+        Text(
+          'Scholar Nexus is an interactive learning app that helps students stay organized and engaged.',
+        ),
+      ],
+    );
+  }
+
+  void _logout(BuildContext context) async {
+    await _auth.signOut();
+    Navigator.pushReplacementNamed(context, '/login');
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: "ScholarNexus",
       debugShowCheckedModeBanner: false,
-      home: _auth.currentUser != null ? MyHomePage() : LoginScreen(),
+      theme: _isDarkTheme ? ThemeData.dark() : ThemeData.light(),
+      home: _auth.currentUser != null
+          ? MyHomePage(toggleTheme: _toggleTheme, showAboutPage: _showAboutPage, logout: _logout)
+          : LoginScreen(),
       onGenerateRoute: (settings) {
         switch (settings.name) {
           case '/':
-            return MaterialPageRoute(builder: (context) => MyHomePage());
+            return MaterialPageRoute(
+                builder: (context) => MyHomePage(toggleTheme: _toggleTheme, showAboutPage: _showAboutPage, logout: _logout));
           case '/login':
             return MaterialPageRoute(builder: (context) => LoginScreen());
           case '/home':
             return MaterialPageRoute(builder: (context) => HomeScreen());
           case '/quiz':
-            return MaterialPageRoute(
-                builder: (context) => QuizScreen());
+            return MaterialPageRoute(builder: (context) => QuizScreen());
           case '/news':
             return MaterialPageRoute(builder: (context) => NewsScreen());
+          case '/profile':
+            return MaterialPageRoute(builder: (context) => ProfileScreen()); // ProfileScreen route
           default:
-            return MaterialPageRoute(builder: (context) => MyHomePage());
+            return MaterialPageRoute(
+                builder: (context) => MyHomePage(toggleTheme: _toggleTheme, showAboutPage: _showAboutPage, logout: _logout));
         }
       },
     );
   }
 }
 
-void _onMenuItemSelected(String value) {
-  // Handle menu item selection here
-  print("Selected menu item: $value");
-}
-
 class MyHomePage extends StatefulWidget {
+  final Function toggleTheme;
+  final Function showAboutPage;
+  final Function logout;
+
+  MyHomePage({required this.toggleTheme, required this.showAboutPage, required this.logout});
+
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
@@ -63,12 +103,25 @@ class _MyHomePageState extends State<MyHomePage> {
     HomeScreen(),
     QuizScreen(),
     NewsScreen(),
+    ProfileScreen(), // Add ProfileScreen as an option
   ];
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  void _onMenuItemSelected(String value) {
+    if (value == 'Theme') {
+      widget.toggleTheme();
+    } else if (value == 'About') {
+      widget.showAboutPage(context);
+    } else if (value == 'Logout') {
+      widget.logout(context);
+    } else if (value == 'Profile') {
+      Navigator.pushNamed(context, '/profile');
+    }
   }
 
   @override
@@ -88,22 +141,42 @@ class _MyHomePageState extends State<MyHomePage> {
             itemBuilder: (BuildContext context) {
               return [
                 PopupMenuItem<String>(
-                  value: 'Option 1',
+                  value: 'Theme',
                   child: Row(
                     children: [
-                      Icon(Icons.settings, color: Colors.blue),
+                      Icon(Icons.brightness_6, color: Colors.blue),
                       SizedBox(width: 10),
-                      Text('Option 1'),
+                      Text('Theme'),
                     ],
                   ),
                 ),
                 PopupMenuItem<String>(
-                  value: 'Option 2',
+                  value: 'Profile',
                   child: Row(
                     children: [
-                      Icon(Icons.help, color: Colors.blue),
+                      Icon(Icons.person, color: Colors.blue),
                       SizedBox(width: 10),
-                      Text('Option 2'),
+                      Text('Profile'),
+                    ],
+                  ),
+                ),
+                PopupMenuItem<String>(
+                  value: 'About',
+                  child: Row(
+                    children: [
+                      Icon(Icons.info, color: Colors.blue),
+                      SizedBox(width: 10),
+                      Text('About'),
+                    ],
+                  ),
+                ),
+                PopupMenuItem<String>(
+                  value: 'Logout',
+                  child: Row(
+                    children: [
+                      Icon(Icons.logout, color: Colors.blue),
+                      SizedBox(width: 10),
+                      Text('Logout'),
                     ],
                   ),
                 ),
@@ -116,6 +189,9 @@ class _MyHomePageState extends State<MyHomePage> {
         child: _widgetOptions[_selectedIndex],
       ),
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: const Color.fromARGB(255, 117, 110, 110), 
+        selectedItemColor: const Color.fromARGB(255, 33, 243, 72), 
+        unselectedItemColor: const Color.fromARGB(255, 21, 21, 21),
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -128,6 +204,10 @@ class _MyHomePageState extends State<MyHomePage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.newspaper),
             label: 'News',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
           ),
         ],
         currentIndex: _selectedIndex,

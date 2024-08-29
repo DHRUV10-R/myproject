@@ -22,6 +22,8 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _passController = TextEditingController();
   bool _isObscure = true;
   final _formKey = GlobalKey<FormState>();
+  
+  late bool _isDarkTheme;
 
   @override
   void initState() {
@@ -41,7 +43,7 @@ class _LoginScreenState extends State<LoginScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => MyHomePage(),
+            builder: (context) =>  MyHomePage(toggleTheme: _toggleTheme, showAboutPage: _showAboutPage, logout: _logout,),
           ),
         );
       }
@@ -90,7 +92,7 @@ class _LoginScreenState extends State<LoginScreen> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => MyHomePage(),
+          builder: (context) =>  MyHomePage(toggleTheme: _toggleTheme, showAboutPage: _showAboutPage, logout: _logout),
         ),
       );
       ScaffoldMessenger.of(context).showSnackBar(
@@ -314,5 +316,30 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
+  }
+
+  _toggleTheme() {
+    setState(() {
+      _isDarkTheme = !_isDarkTheme;
+    });
+  }
+
+  _showAboutPage() {
+    showAboutDialog(
+      context: context,
+      applicationName: 'Scholar Nexus',
+      applicationVersion: '1.0.0',
+      applicationIcon: Icon(Icons.school, size: 50),
+      children: [
+        Text(
+          'Scholar Nexus is an interactive learning app that helps students stay organized and engaged.',
+        ),
+      ],
+    );
+  }
+
+  _logout() async {
+    await _auth.signOut();
+    Navigator.pushReplacementNamed(context, '/login');
   }
 }
