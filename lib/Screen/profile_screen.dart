@@ -1,7 +1,8 @@
-// profile_screen.dart
-
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -11,15 +12,58 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   late User? user = FirebaseAuth.instance.currentUser;
   final _nameController = TextEditingController();
-  final _photoUrlController = TextEditingController();
+  final ImagePicker _picker = ImagePicker();
+  String? _photoUrl;
+  bool _isUploading = false;
 
   @override
   void initState() {
     super.initState();
-    // Initialize text controllers with current user info
     if (user != null) {
       _nameController.text = user!.displayName ?? '';
-      _photoUrlController.text = user!.photoURL ?? '';
+      _photoUrl = user!.photoURL;
+    }
+  }
+
+  Future<void> _pickImage() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      setState(() {
+        _isUploading = true;
+      });
+
+      // Upload to Firebase Storage
+      try {
+        final storageRef = FirebaseStorage.instance
+            .ref()
+            .child('profile_pictures')
+            .child(user!.uid + '.jpg');
+        await storageRef.putFile(File(pickedFile.path));
+        String downloadUrl = await storageRef.getDownloadURL();
+
+        // Update the user's profile picture URL
+        await user!.updateProfile(photoURL: downloadUrl);
+        await user!.reload();
+        user = FirebaseAuth.instance.currentUser;
+
+        setState(() {
+          _photoUrl = downloadUrl;
+          _isUploading = false;
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Profile picture updated successfully')),
+        );
+      } catch (e) {
+        setState(() {
+          _isUploading = false;
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to upload image: $e')),
+        );
+      }
     }
   }
 
@@ -29,10 +73,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
     try {
       await user!.updateProfile(
         displayName: _nameController.text,
-        photoURL: _photoUrlController.text,
+        photoURL: _photoUrl,
       );
-      await user!.reload(); // Reload user to reflect changes
-      user = FirebaseAuth.instance.currentUser; // Refresh user info
+      await user!.reload();
+      user = FirebaseAuth.instance.currentUser;
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Profile updated successfully')),
       );
@@ -48,6 +93,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Profile'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.logout),
+            onPressed: () async {
+              await FirebaseAuth.instance.signOut();
+              Navigator.pushReplacementNamed(context, '/login');
+            },
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -55,14 +109,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Center(
-              child: CircleAvatar(
-                radius: 50,
-                backgroundImage: _photoUrlController.text.isNotEmpty
-                    ? NetworkImage(_photoUrlController.text)
-                    : null,
-                child: _photoUrlController.text.isEmpty
-                    ? Icon(Icons.person, size: 50)
-                    : null,
+              child: Stack(
+                children: [
+                  CircleAvatar(
+                    radius: 50,
+                    backgroundImage:
+                        _photoUrl != null ? NetworkImage(_photoUrl!) : null,
+                    child: _photoUrl == null
+                        ? Icon(Icons.person, size: 50)
+                        : null,
+                  ),
+                  Positioned(
+                    bottom: 0,
+                    right: 0,
+                    child: IconButton(
+                      icon: Icon(Icons.camera_alt),
+                      onPressed: _isUploading ? null : _pickImage,
+                    ),
+                  ),
+                ],
               ),
             ),
             SizedBox(height: 20),
@@ -74,17 +139,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               controller: _nameController,
               decoration: InputDecoration(
                 hintText: 'Enter your name',
-              ),
-            ),
-            SizedBox(height: 10),
-            Text(
-              'Profile Picture URL:',
-              style: TextStyle(fontSize: 18),
-            ),
-            TextField(
-              controller: _photoUrlController,
-              decoration: InputDecoration(
-                hintText: 'Enter profile picture URL',
               ),
             ),
             SizedBox(height: 20),

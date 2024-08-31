@@ -1,13 +1,14 @@
-// main.dart
+// ignore_for_file: unused_field
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:my_prg/Screen/quiz_screen.dart';
-import 'Screen/home_screen.dart';
 import 'Screen/login_screen.dart';
 import 'Screen/news_screen.dart';
-import 'Screen/profile_screen.dart'; 
+import 'Screen/profile_screen.dart';
+import 'Screen/todo_list_screen.dart';  
+import 'Screen/home_screen.dart';  
 import 'firebase_options.dart';
 
 void main() async {
@@ -61,6 +62,14 @@ class _MyAppState extends State<MyApp> {
       home: _auth.currentUser != null
           ? MyHomePage(toggleTheme: _toggleTheme, showAboutPage: _showAboutPage, logout: _logout)
           : LoginScreen(),
+      routes: {
+        '/login': (context) => LoginScreen(),
+        '/home': (context) => HomeScreen(),  // HomeScreen is the ReminderScreen
+        '/quiz': (context) => QuizScreen(),
+        '/news': (context) => NewsScreen(),
+        '/profile': (context) => ProfileScreen(),
+        '/todo': (context) => ToDoListScreen(),  // ToDoListScreen route
+      },
       onGenerateRoute: (settings) {
         switch (settings.name) {
           case '/':
@@ -75,7 +84,9 @@ class _MyAppState extends State<MyApp> {
           case '/news':
             return MaterialPageRoute(builder: (context) => NewsScreen());
           case '/profile':
-            return MaterialPageRoute(builder: (context) => ProfileScreen()); // ProfileScreen route
+            return MaterialPageRoute(builder: (context) => ProfileScreen());
+          case '/todo':
+            return MaterialPageRoute(builder: (context) => ToDoListScreen());
           default:
             return MaterialPageRoute(
                 builder: (context) => MyHomePage(toggleTheme: _toggleTheme, showAboutPage: _showAboutPage, logout: _logout));
@@ -100,10 +111,10 @@ class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
 
   static List<Widget> _widgetOptions = <Widget>[
-    HomeScreen(),
+    HomeScreen(),  
     QuizScreen(),
     NewsScreen(),
-    ProfileScreen(), // Add ProfileScreen as an option
+    ProfileScreen(), 
   ];
 
   void _onItemTapped(int index) {
@@ -186,7 +197,38 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       ),
       body: Center(
-        child: _widgetOptions[_selectedIndex],
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            InkWell(
+              onTap: () {
+                Navigator.pushNamed(context, '/home');  // Navigate to HomeScreen (ReminderScreen)
+              },
+              child: Container(
+                padding: EdgeInsets.all(20),
+                margin: EdgeInsets.only(bottom: 20),
+                color: Colors.blue,
+                child: Text(
+                  'Go to Reminder',
+                  style: TextStyle(color: Colors.white, fontSize: 18),
+                ),
+              ),
+            ),
+            InkWell(
+              onTap: () {
+                Navigator.pushNamed(context, '/todo');  // Navigate to ToDoListScreen
+              },
+              child: Container(
+                padding: EdgeInsets.all(20),
+                color: Colors.green,
+                child: Text(
+                  'Go to To-Do List',
+                  style: TextStyle(color: Colors.white, fontSize: 18),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: const Color.fromARGB(255, 117, 110, 110), 
