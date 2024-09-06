@@ -10,6 +10,98 @@
       "options": ["Earth", "Mars", "Jupiter", "Saturn"],
       "correctOptionIndex": 1,
       "category": "Science"
-    }
-  ]
+    },
+    {
+        "questionText": "What is the capital of France?",
+        "options": ["Paris", "London", "Berlin", "Madrid"],
+        "correctOptionIndex": 0,
+        "category": "Geography"
+      },
+      {
+        "questionText": "Which planet is known as the Red Planet?",
+        "options": ["Earth", "Mars", "Jupiter", "Saturn"],
+        "correctOptionIndex": 1,
+        "category": "Science"
+      },
+      {
+        "questionText": "What is the largest ocean on Earth?",
+        "options": ["Atlantic Ocean", "Indian Ocean", "Arctic Ocean", "Pacific Ocean"],
+        "correctOptionIndex": 3,
+        "category": "Geography"
+      },
+      {
+        "questionText": "Who is known as the father of modern physics?",
+        "options": ["Isaac Newton", "Albert Einstein", "Galileo Galilei", "Niels Bohr"],
+        "correctOptionIndex": 1,
+        "category": "Science"
+      },
+      {
+        "questionText": "What is the smallest country in the world?",
+        "options": ["Monaco", "Vatican City", "San Marino", "Liechtenstein"],
+        "correctOptionIndex": 1,
+        "category": "Geography"
+      },
+      {
+        "questionText": "Which element has the chemical symbol 'O'?",
+        "options": ["Osmium", "Oxygen", "Oganesson", "Olivine"],
+        "correctOptionIndex": 1,
+        "category": "Science"
+      },
+      {
+        "questionText": "Who wrote the play 'Romeo and Juliet'?",
+        "options": ["William Shakespeare", "George Bernard Shaw", "Arthur Miller", "Tennessee Williams"],
+        "correctOptionIndex": 0,
+        "category": "Literature"
+      },
+      {
+        "questionText": "What is the longest river in the world?",
+        "options": ["Amazon River", "Nile River", "Yangtze River", "Mississippi River"],
+        "correctOptionIndex": 1,
+        "category": "Geography"
+      },
+      {
+        "questionText": "In which year did the Titanic sink?",
+        "options": ["1912", "1905", "1923", "1898"],
+        "correctOptionIndex": 0,
+        "category": "History"
+      },
+      {
+        "questionText": "What is the chemical symbol for gold?",
+        "options": ["Au", "Ag", "Pb", "Fe"],
+        "correctOptionIndex": 0,
+        "category": "Science"
+      },
+      {
+        "questionText": "Which novel is considered a classic of American literature and was written by Mark Twain?",
+        "options": ["The Great Gatsby", "To Kill a Mockingbird", "The Adventures of Tom Sawyer", "Moby Dick"],
+        "correctOptionIndex": 2,
+        "category": "Literature"
+      },
+      {
+        "questionText": "What is the hardest natural substance on Earth?",
+        "options": ["Gold", "Iron", "Diamond", "Platinum"],
+        "correctOptionIndex": 2,
+        "category": "Science"
+      },
+      {
+        "questionText": "What was the first human-made satellite to orbit the Earth?",
+        "options": ["Sputnik 1", "Explorer 1", "Hubble Space Telescope", "Apollo 11"],
+        "correctOptionIndex": 0,
+        "category": "Science"
+      },
+      {
+        "questionText": "Which country is known as the Land of the Rising Sun?",
+        "options": ["Japan", "China", "Thailand", "South Korea"],
+        "correctOptionIndex": 0,
+        "category": "Geography"
+      },
+      {
+        "questionText": "Who is known for developing the theory of evolution by natural selection?",
+        "options": ["Charles Darwin", "Gregor Mendel", "Louis Pasteur", "Francis Crick"],
+        "correctOptionIndex": 0,
+        "category": "Science"
+      }
+]
+    
+  
   
