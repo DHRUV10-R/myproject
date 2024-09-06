@@ -21,8 +21,6 @@ samples, guidance on mobile development, and a full API reference.
 <img src="https://playerzon.com/asset/download.png" width="200"></img></a>
 
 
-[text](build/app/outputs/flutter-apk/app-release.apk)
-
 
 ## Screenshots
 
