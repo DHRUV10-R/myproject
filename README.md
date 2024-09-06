@@ -1,6 +1,10 @@
-# my_prg
+# SCHOLARNECUX APP
 
 A new Flutter project.
+ScholarNexus: Connecting Students to Success
+
+Description:-
+"ScholarNexus" combines "Scholar," referring to a student or someone engaged in academic learning, and "Nexus," meaning a central or focal point where different things come together. Together, "ScholarNexus" suggests a hub or platform where students can access a variety of academic resources, support, and tools to enhance their learning experience. It conveys the idea of connecting students to a network of educational aids and fostering a collaborative learning environment.
 
 ## Getting Started
 
