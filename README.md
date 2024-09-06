@@ -26,8 +26,7 @@ samples, guidance on mobile development, and a full API reference.
 
 ## Screenshots
 
-Dark theme               |  Light Theme               | Dark theme               |  Light Theme
-:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------
+All THEMES (DARK & LIGHT)
 ![dark_home_Screen](https://github.com/user-attachments/assets/5b1cf9fc-f546-4d91-b08f-d0cccbba30da)
 ![dark_Newz](https://github.com/user-attachments/assets/95c59a78-a698-4f32-be4d-02b24ae68fa0)
 ![dark_profile](https://github.com/user-attachments/assets/ccf88556-7744-4794-a23c-24368be007c9)
