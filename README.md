@@ -17,7 +17,7 @@ samples, guidance on mobile development, and a full API reference.
 
 ##Download App:-
 
-<a href="build/app/outputs/flutter-apk/app-release.apk">
+<a href="https://github.com/DHRUV10-R/myproject/releases/download/Download/app-debug.apk">
 <img src="https://playerzon.com/asset/download.png" width="200"></img></a>
 
 
