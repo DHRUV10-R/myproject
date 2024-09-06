@@ -15,6 +15,10 @@ For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
 
-Download App:-
+##Download App:-
+
+<a href="https://github.com/TheAlphamerc/flutter_news_app/releases/download/v1.0.0/app-release.apk">
+<img src="https://playerzon.com/asset/download.png" width="200"></img></a>
+
 
 [text](build/app/outputs/flutter-apk/app-release.apk)
