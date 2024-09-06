@@ -1,4 +1,4 @@
-# SCHOLARNECUX APP
+# SCHOLARNEXUS APP
 
 A new Flutter project.
 ScholarNexus: Connecting Students to Success
