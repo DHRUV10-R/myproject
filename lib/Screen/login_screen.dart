@@ -43,9 +43,8 @@ class _LoginScreenState extends State<LoginScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) =>  MyHomePage(toggleTheme: _toggleTheme, showAboutPage: _showAboutPage, logout: _logout,),
-          ),
-        );
+            builder: (context) => MyHomePage(toggleTheme: _toggleTheme(), showAboutPage: _showAboutPage(), logout: _logout(),),
+        ));
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -92,7 +91,7 @@ class _LoginScreenState extends State<LoginScreen> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) =>  MyHomePage(toggleTheme: _toggleTheme, showAboutPage: _showAboutPage, logout: _logout),
+          builder: (context) =>  MyHomePage(toggleTheme: _toggleTheme(), showAboutPage: _showAboutPage(), logout: _logout(),),
         ),
       );
       ScaffoldMessenger.of(context).showSnackBar(

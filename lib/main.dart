@@ -1,12 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:my_prg/Screen/home_screen.dart';
 import 'package:my_prg/Screen/quiz_screen.dart';
+import 'package:my_prg/Screen/reminder.dart';
 import 'Screen/login_screen.dart';
 import 'Screen/news_screen.dart';
 import 'Screen/profile_screen.dart';
-import 'Screen/todo_list_screen.dart';  
-import 'Screen/home_screen.dart';  
+import 'Screen/todo_list_screen.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -58,15 +59,19 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       theme: _isDarkTheme ? ThemeData.dark() : ThemeData.light(),
       home: _auth.currentUser != null
-          ? MyHomePage(toggleTheme: _toggleTheme, showAboutPage: _showAboutPage, logout: _logout)
+          ? MyHomePage(
+              toggleTheme: _toggleTheme,
+              showAboutPage: _showAboutPage,
+              logout: _logout)
           : LoginScreen(),
       routes: {
         '/login': (context) => LoginScreen(),
-        '/home': (context) => HomeScreen(),  
+        '/home': (context) => HomeScreen(),
         '/quiz': (context) => QuizScreen(),
         '/news': (context) => NewsScreen(),
         '/profile': (context) => ProfileScreen(),
-        '/todo': (context) => ToDoListScreen(),  
+        '/todo': (context) => ToDoListScreen(),
+        '/rem': (context) => ReminderScreen(),
       },
     );
   }
@@ -87,10 +92,10 @@ class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
 
   static List<Widget> _widgetOptions = <Widget>[
-    HomeScreen(),  
+    HomeScreen(),
     QuizScreen(),
     NewsScreen(),
-    ProfileScreen(), 
+    ProfileScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -172,10 +177,11 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
       ),
-      body: _widgetOptions[_selectedIndex],  // Dynamically update body based on the selected tab
+      body: _widgetOptions[
+          _selectedIndex], // Dynamically update body based on the selected tab
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Color.fromARGB(255, 143, 134, 134), 
-        selectedItemColor: Color.fromARGB(255, 33, 203, 53), 
+        backgroundColor: Color.fromARGB(255, 143, 134, 134),
+        selectedItemColor: Color.fromARGB(255, 33, 203, 53),
         unselectedItemColor: Color.fromARGB(255, 32, 123, 197),
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(

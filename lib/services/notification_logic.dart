@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:my_prg/Screen/home_screen.dart';
+import 'package:my_prg/Screen/reminder.dart';
 
 import 'package:rxdart/rxdart.dart';
 import 'package:timezone/timezone.dart' as tz;
@@ -27,7 +27,7 @@ class NotificationLogic {
       Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => HomeScreen(),
+            builder: (context) => ReminderScreen(),
           ));
 
       onNotification.add(payload as String?);
