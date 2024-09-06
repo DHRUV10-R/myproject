@@ -1,5 +1,3 @@
-// ignore_for_file: unused_field
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -64,33 +62,11 @@ class _MyAppState extends State<MyApp> {
           : LoginScreen(),
       routes: {
         '/login': (context) => LoginScreen(),
-        '/home': (context) => HomeScreen(),  // HomeScreen is the ReminderScreen
+        '/home': (context) => HomeScreen(),  
         '/quiz': (context) => QuizScreen(),
         '/news': (context) => NewsScreen(),
         '/profile': (context) => ProfileScreen(),
-        '/todo': (context) => ToDoListScreen(),  // ToDoListScreen route
-      },
-      onGenerateRoute: (settings) {
-        switch (settings.name) {
-          case '/':
-            return MaterialPageRoute(
-                builder: (context) => MyHomePage(toggleTheme: _toggleTheme, showAboutPage: _showAboutPage, logout: _logout));
-          case '/login':
-            return MaterialPageRoute(builder: (context) => LoginScreen());
-          case '/home':
-            return MaterialPageRoute(builder: (context) => HomeScreen());
-          case '/quiz':
-            return MaterialPageRoute(builder: (context) => QuizScreen());
-          case '/news':
-            return MaterialPageRoute(builder: (context) => NewsScreen());
-          case '/profile':
-            return MaterialPageRoute(builder: (context) => ProfileScreen());
-          case '/todo':
-            return MaterialPageRoute(builder: (context) => ToDoListScreen());
-          default:
-            return MaterialPageRoute(
-                builder: (context) => MyHomePage(toggleTheme: _toggleTheme, showAboutPage: _showAboutPage, logout: _logout));
-        }
+        '/todo': (context) => ToDoListScreen(),  
       },
     );
   }
@@ -196,44 +172,11 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            InkWell(
-              onTap: () {
-                Navigator.pushNamed(context, '/home');  // Navigate to HomeScreen (ReminderScreen)
-              },
-              child: Container(
-                padding: EdgeInsets.all(20),
-                margin: EdgeInsets.only(bottom: 20),
-                color: Colors.blue,
-                child: Text(
-                  'Go to Reminder',
-                  style: TextStyle(color: Colors.white, fontSize: 18),
-                ),
-              ),
-            ),
-            InkWell(
-              onTap: () {
-                Navigator.pushNamed(context, '/todo');  // Navigate to ToDoListScreen
-              },
-              child: Container(
-                padding: EdgeInsets.all(20),
-                color: Colors.green,
-                child: Text(
-                  'Go to To-Do List',
-                  style: TextStyle(color: Colors.white, fontSize: 18),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
+      body: _widgetOptions[_selectedIndex],  // Dynamically update body based on the selected tab
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: const Color.fromARGB(255, 117, 110, 110), 
-        selectedItemColor: const Color.fromARGB(255, 33, 243, 72), 
-        unselectedItemColor: const Color.fromARGB(255, 21, 21, 21),
+        backgroundColor: Color.fromARGB(255, 143, 134, 134), 
+        selectedItemColor: Color.fromARGB(255, 33, 203, 53), 
+        unselectedItemColor: Color.fromARGB(255, 32, 123, 197),
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),

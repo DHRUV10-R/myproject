@@ -1,20 +1,31 @@
+import 'dart:convert';
+import 'package:flutter/services.dart' show rootBundle;
+
 class Question {
-  String questionText;
-  List<String> options;
-  int correctOptionIndex;
+  final String questionText;
+  final List<String> options;
+  final int correctOptionIndex;
+  final String category;
 
   Question({
     required this.questionText,
     required this.options,
     required this.correctOptionIndex,
+    required this.category,
   });
 
-  // Method to create a Question from a map (for dynamic loading)
-  factory Question.fromMap(Map<String, dynamic> data) {
+  factory Question.fromMap(Map<String, dynamic> map) {
     return Question(
-      questionText: data['questionText'] as String,
-      options: List<String>.from(data['options'] as List<dynamic>),
-      correctOptionIndex: data['correctOptionIndex'] as int,
+      questionText: map['questionText'],
+      options: List<String>.from(map['options']),
+      correctOptionIndex: map['correctOptionIndex'],
+      category: map['category'],
     );
   }
+}
+
+Future<List<Question>> loadQuestions() async {
+  final String jsonString = await rootBundle.loadString('assets/questions.json');
+  final List<dynamic> jsonList = json.decode(jsonString);
+  return jsonList.map((jsonItem) => Question.fromMap(jsonItem)).toList();
 }
