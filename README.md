@@ -1,6 +1,10 @@
-# my_prg
+# SCHOLARNEXUS APP
 
 A new Flutter project.
+ScholarNexus: Connecting Students to Success
+
+Description:-
+"ScholarNexus" combines "Scholar," referring to a student or someone engaged in academic learning, and "Nexus," meaning a central or focal point where different things come together. Together, "ScholarNexus" suggests a hub or platform where students can access a variety of academic resources, support, and tools to enhance their learning experience. It conveys the idea of connecting students to a network of educational aids and fostering a collaborative learning environment.
 
 ## Getting Started
 
@@ -17,17 +21,14 @@ samples, guidance on mobile development, and a full API reference.
 
 ##Download App:-
 
-<a href="https://github.com/TheAlphamerc/flutter_news_app/releases/download/v1.0.0/app-release.apk">
+<a href="">
 <img src="https://playerzon.com/asset/download.png" width="200"></img></a>
 
-
-[text](build/app/outputs/flutter-apk/app-release.apk)
 
 
 ## Screenshots
 
-Dark theme               |  Light Theme               | Dark theme               |  Light Theme
-:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------
+All THEMES (DARK & LIGHT)
 ![dark_home_Screen](https://github.com/user-attachments/assets/5b1cf9fc-f546-4d91-b08f-d0cccbba30da)
 ![dark_Newz](https://github.com/user-attachments/assets/95c59a78-a698-4f32-be4d-02b24ae68fa0)
 ![dark_profile](https://github.com/user-attachments/assets/ccf88556-7744-4794-a23c-24368be007c9)
