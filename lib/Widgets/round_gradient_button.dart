@@ -23,7 +23,7 @@ class RoundGradientButton extends StatelessWidget{
             ),
             borderRadius: BorderRadius.circular(25),
             boxShadow: const [
-              BoxShadow(color: Colors.black26,blurRadius: 2,offset: Offset(0, 2)),
+              BoxShadow(color: Color.fromARGB(66, 230, 225, 225),blurRadius: 2,offset: Offset(0, 2)),
             ],
             ),
             child: MaterialButton(onPressed: onPressed,
@@ -31,11 +31,11 @@ class RoundGradientButton extends StatelessWidget{
             height: 50,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25),
             ),
-            textColor: const Color.fromRGBO(20, 218, 119, 0.904),
+            textColor: Color.fromARGB(255, 5, 172, 244),
             child: Text(title,
             style: const TextStyle(
               fontSize: 16,
-              color: Color.fromARGB(255, 245, 236, 236),
+              color: Color.fromARGB(255, 10, 9, 9),
               fontWeight: FontWeight.w700,
             ),
             ),

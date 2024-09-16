@@ -12,6 +12,12 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   late User? user = FirebaseAuth.instance.currentUser;
   final _nameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _phoneController = TextEditingController();
+  final _schoolController = TextEditingController();
+  final _majorController = TextEditingController();
+  final _bioController = TextEditingController();
+  String _selectedYear = 'Freshman';
   final ImagePicker _picker = ImagePicker();
   String? _photoUrl;
   bool _isUploading = false;
@@ -21,6 +27,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     super.initState();
     if (user != null) {
       _nameController.text = user!.displayName ?? '';
+      _emailController.text = user!.email ?? '';
       _photoUrl = user!.photoURL;
     }
   }
@@ -33,7 +40,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         _isUploading = true;
       });
 
-      // Upload to Firebase Storage
       try {
         final storageRef = FirebaseStorage.instance
             .ref()
@@ -42,7 +48,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         await storageRef.putFile(File(pickedFile.path));
         String downloadUrl = await storageRef.getDownloadURL();
 
-        // Update the user's profile picture URL
         await user!.updateProfile(photoURL: downloadUrl);
         await user!.reload();
         user = FirebaseAuth.instance.currentUser;
@@ -105,50 +110,133 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Center(
-              child: Stack(
-                children: [
-                  CircleAvatar(
-                    radius: 50,
-                    backgroundImage:
-                        _photoUrl != null ? NetworkImage(_photoUrl!) : null,
-                    child: _photoUrl == null
-                        ? Icon(Icons.person, size: 50)
-                        : null,
-                  ),
-                  Positioned(
-                    bottom: 0,
-                    right: 0,
-                    child: IconButton(
-                      icon: Icon(Icons.camera_alt),
-                      onPressed: _isUploading ? null : _pickImage,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Center(
+                child: Stack(
+                  children: [
+                    CircleAvatar(
+                      radius: 50,
+                      backgroundImage:
+                          _photoUrl != null ? NetworkImage(_photoUrl!) : null,
+                      child: _photoUrl == null
+                          ? Icon(Icons.person, size: 50)
+                          : null,
                     ),
-                  ),
-                ],
+                    Positioned(
+                      bottom: 0,
+                      right: 0,
+                      child: IconButton(
+                        icon: Icon(Icons.camera_alt),
+                        onPressed: _isUploading ? null : _pickImage,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            SizedBox(height: 20),
-            Text(
-              'Name:',
-              style: TextStyle(fontSize: 18),
-            ),
-            TextField(
-              controller: _nameController,
-              decoration: InputDecoration(
-                hintText: 'Enter your name',
+              SizedBox(height: 20),
+              Text(
+                'Name:',
+                style: TextStyle(fontSize: 18),
               ),
-            ),
-            SizedBox(height: 20),
-            Center(
-              child: ElevatedButton(
-                onPressed: _updateProfile,
-                child: Text('Save Changes'),
+              TextField(
+                controller: _nameController,
+                decoration: InputDecoration(
+                  hintText: 'Enter your name',
+                ),
               ),
-            ),
-          ],
+              SizedBox(height: 20),
+              Text(
+                'Email:',
+                style: TextStyle(fontSize: 18),
+              ),
+              TextField(
+                controller: _emailController,
+                readOnly: true,
+                decoration: InputDecoration(
+                  hintText: 'Your email',
+                ),
+              ),
+              SizedBox(height: 20),
+              Text(
+                'Phone Number:',
+                style: TextStyle(fontSize: 18),
+              ),
+              TextField(
+                controller: _phoneController,
+                decoration: InputDecoration(
+                  hintText: 'Enter your phone number',
+                ),
+              ),
+              SizedBox(height: 20),
+              Text(
+                'School/University:',
+                style: TextStyle(fontSize: 18),
+              ),
+              TextField(
+                controller: _schoolController,
+                decoration: InputDecoration(
+                  hintText: 'Enter your school or university',
+                ),
+              ),
+              SizedBox(height: 20),
+              Text(
+                'Major/Subjects:',
+                style: TextStyle(fontSize: 18),
+              ),
+              TextField(
+                controller: _majorController,
+                decoration: InputDecoration(
+                  hintText: 'Enter your major or key subjects',
+                ),
+              ),
+              SizedBox(height: 20),
+              Text(
+                'Year of Study:',
+                style: TextStyle(fontSize: 18),
+              ),
+              DropdownButton<String>(
+                value: _selectedYear,
+                onChanged: (String? newValue) {
+                  setState(() {
+                    _selectedYear = newValue!;
+                  });
+                },
+                items: <String>[
+                  'Freshman',
+                  'Sophomore',
+                  'Junior',
+                  'Senior',
+                ].map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+              ),
+              SizedBox(height: 20),
+              Text(
+                'Bio:',
+                style: TextStyle(fontSize: 18),
+              ),
+              TextField(
+                controller: _bioController,
+                maxLines: 3,
+                decoration: InputDecoration(
+                  hintText: 'Enter a short bio',
+                ),
+              ),
+              SizedBox(height: 20),
+              Center(
+                child: ElevatedButton(
+                  onPressed: _updateProfile,
+                  child: Text('Save Changes'),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

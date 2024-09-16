@@ -23,11 +23,12 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _isObscure = true;
   final _formKey = GlobalKey<FormState>();
   
-  late bool _isDarkTheme;
+  bool _isDarkTheme =false;
 
   @override
   void initState() {
     super.initState();
+    _isDarkTheme = false;
   }
 
   Future<User?> _signIn(
@@ -112,7 +113,7 @@ class _LoginScreenState extends State<LoginScreen> {
     var media = MediaQuery.of(context).size;
 
     return Scaffold(
-      backgroundColor: AppColors.whiteColor,
+      backgroundColor: Color.fromARGB(255, 121, 180, 220),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
@@ -209,7 +210,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Text(
                       "Forgot your password?",
                       style: TextStyle(
-                        color: AppColors.secondary_Color1,
+                        color: const Color.fromARGB(255, 7, 74, 241),
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
                       ),
@@ -218,13 +219,14 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 SizedBox(height: media.width * 0.1),
                 RoundGradientButton(
-                  title: "Login",
+                  title: "Login",               
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
                       _signIn(
                           context, _emailController.text, _passController.text);
                     }
                   },
+                  
                 ),
                 SizedBox(height: media.width * 0.1),
                 Row(
@@ -232,13 +234,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     Expanded(
                       child: Container(
                         height: 1,
-                        color: AppColors.grayColor.withOpacity(0.5),
+                        color: const Color.fromARGB(255, 11, 11, 11).withOpacity(0.5),
                       ),
                     ),
                     Text(
                       "   Or   ",
                       style: TextStyle(
-                        color: AppColors.grayColor,
+                        color: const Color.fromARGB(255, 11, 11, 11),
                         fontSize: 12,
                         fontWeight: FontWeight.w400,
                       ),
@@ -246,7 +248,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     Expanded(
                       child: Container(
                         height: 1,
-                        color: AppColors.grayColor.withOpacity(0.5),
+                        color: const Color.fromARGB(255, 11, 11, 11).withOpacity(0.5),
                       ),
                     ),
                   ],
@@ -264,7 +266,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(14),
                           border: Border.all(
-                            color: AppColors.primary_Color1.withOpacity(0.5),
+                            color: const Color.fromARGB(255, 2, 2, 2).withOpacity(0.5),
                             width: 1,
                           ),
                         ),

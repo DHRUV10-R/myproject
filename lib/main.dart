@@ -49,6 +49,9 @@ class _MyAppState extends State<MyApp> {
 
   void _logout(BuildContext context) async {
     await _auth.signOut();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Logged out successfully!')),
+    );
     Navigator.pushReplacementNamed(context, '/login');
   }
 
@@ -82,7 +85,10 @@ class MyHomePage extends StatefulWidget {
   final Function showAboutPage;
   final Function logout;
 
-  MyHomePage({required this.toggleTheme, required this.showAboutPage, required this.logout});
+  MyHomePage(
+      {required this.toggleTheme,
+      required this.showAboutPage,
+      required this.logout});
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -107,6 +113,10 @@ class _MyHomePageState extends State<MyHomePage> {
   void _onMenuItemSelected(String value) {
     if (value == 'Theme') {
       widget.toggleTheme();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            content: Text(_selectedIndex == 0 ? 'Light Theme' : 'Dark Theme')),
+      );
     } else if (value == 'About') {
       widget.showAboutPage(context);
     } else if (value == 'Logout') {
@@ -121,11 +131,17 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Scholar Nexus'),
-        leading: IconButton(
-          icon: const Icon(Icons.account_box),
+        leading: TextButton(
           onPressed: () {
-            Navigator.pushNamed(context, '/login');
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => LoginScreen()),
+            );
           },
+          child: Text(
+            'Login',
+            style: TextStyle(color: Colors.blue),
+          ),
         ),
         actions: <Widget>[
           PopupMenuButton<String>(
@@ -177,32 +193,35 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
       ),
-      body: _widgetOptions[
-          _selectedIndex], // Dynamically update body based on the selected tab
+      body: AnimatedSwitcher(
+        duration: Duration(milliseconds: 300),
+        child: _widgetOptions[_selectedIndex],
+      ),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Color.fromARGB(255, 143, 134, 134),
-        selectedItemColor: Color.fromARGB(255, 33, 203, 53),
-        unselectedItemColor: Color.fromARGB(255, 32, 123, 197),
+        backgroundColor: Colors.grey[900],
+        selectedItemColor: Colors.greenAccent,
+        unselectedItemColor: Colors.grey,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: Icon(Icons.home, size: 30),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.quiz),
+            icon: Icon(Icons.quiz, size: 30),
             label: 'Quiz',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.newspaper),
+            icon: Icon(Icons.newspaper, size: 30),
             label: 'News',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
+            icon: Icon(Icons.person, size: 30),
             label: 'Profile',
           ),
         ],
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
+        elevation: 10,
       ),
     );
   }
