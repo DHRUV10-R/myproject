@@ -25,22 +25,6 @@ class _NotesScreenState extends State<NotesScreen> {
     });
   }
 
-<<<<<<< HEAD
-  void _goToStudyAssistant() {
-    if (notes.isNotEmpty) {
-      String allNotes = notes.join(" "); // Concatenating all notes into one string
-      Navigator.pushNamed(context, '/studyAssistant', arguments: allNotes);
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Please add some notes first.'),
-        ),
-      );
-    }
-  }
-
-=======
->>>>>>> 84f48cb76deb395e087b55c156fc1b7d8eab821e
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,11 +41,7 @@ class _NotesScreenState extends State<NotesScreen> {
               decoration: InputDecoration(
                 labelText: 'Enter your note',
                 border: OutlineInputBorder(
-<<<<<<< HEAD
-                  borderRadius: BorderRadius.circular(5),
-=======
                   borderRadius: BorderRadius.circular(15),
->>>>>>> 84f48cb76deb395e087b55c156fc1b7d8eab821e
                 ),
               ),
             ),
@@ -102,20 +82,6 @@ class _NotesScreenState extends State<NotesScreen> {
                       },
                     ),
             ),
-<<<<<<< HEAD
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _goToStudyAssistant,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blueAccent,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15),
-                ),
-              ),
-              child: Text('Generate Summary'),
-            ),
-=======
->>>>>>> 84f48cb76deb395e087b55c156fc1b7d8eab821e
           ],
         ),
       ),
