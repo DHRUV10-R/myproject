@@ -1,9 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:my_prg/Screen/home_screen.dart';
-import 'package:my_prg/Screen/quiz_screen.dart';
-import 'package:my_prg/Screen/reminder.dart';
+import 'Screen/StudyAssistantScreen.dart';
+import 'Screen/Notes_screen.dart';
+import 'Screen/home_screen.dart';
+import 'Screen/quiz_screen.dart';
+import 'Screen/reminder.dart';
 import 'Screen/login_screen.dart';
 import 'Screen/news_screen.dart';
 import 'Screen/profile_screen.dart';
@@ -75,6 +77,8 @@ class _MyAppState extends State<MyApp> {
         '/profile': (context) => ProfileScreen(),
         '/todo': (context) => ToDoListScreen(),
         '/rem': (context) => ReminderScreen(),
+        '/notes': (context) => NotesScreen(),
+        '/studyAssistant': (context) => StudyAssistantScreen(),
       },
     );
   }

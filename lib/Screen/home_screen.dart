@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:my_prg/utils/app_colors.dart';
 
@@ -15,43 +13,79 @@ class HomeScreen extends StatelessWidget {
           "WELCOME STUDENTS",
           style: TextStyle(
             color: AppColors.blackColor,
-            fontSize: 16,
-            fontWeight: FontWeight.w700,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
           ),
         ),
       ),
-      body: Center(
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            InkWell(
+            _buildCard(
+              title: 'Go to Reminder',
+              color: Colors.blueAccent,
+              icon: Icons.alarm,
               onTap: () {
-                Navigator.pushNamed(context, '/rem'); // Ensure '/home' is defined in your routes
+                Navigator.pushNamed(context, '/rem');
               },
-              child: Container(
-                padding: EdgeInsets.all(20),
-                margin: EdgeInsets.only(bottom: 20),
-                color: Colors.blue,
-                child: Text(
-                  'Go to Reminder',
-                  style: TextStyle(color: Colors.white, fontSize: 18),
-                ),
-              ),
             ),
-            InkWell(
+            SizedBox(height: 20),
+            _buildCard(
+              title: 'Go to To-Do List',
+              color: Colors.green,
+              icon: Icons.check_circle_outline,
               onTap: () {
-                Navigator.pushNamed(context, '/todo'); // Ensure '/todo' is defined in your routes
+                Navigator.pushNamed(context, '/todo');
               },
-              child: Container(
-                padding: EdgeInsets.all(20),
-                color: Colors.green,
-                child: Text(
-                  'Go to To-Do List',
-                  style: TextStyle(color: Colors.white, fontSize: 18),
-                ),
-              ),
+            ),
+            SizedBox(height: 20),
+            _buildCard(
+              title: 'Go to Notes',
+              color: Colors.orange,
+              icon: Icons.note,
+              onTap: () {
+                Navigator.pushNamed(context, '/notes');
+              },
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCard({
+    required String title,
+    required Color color,
+    required IconData icon,
+    required Function()? onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15),
+        ),
+        elevation: 5,
+        color: color,
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Icon(icon, size: 30, color: Colors.white),
+              const SizedBox(width: 20),
+              Text(
+                title,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
