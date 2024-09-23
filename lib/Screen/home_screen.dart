@@ -55,16 +55,12 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-<<<<<<< HEAD
   Widget _buildCard({
     required String title,
     required Color color,
     required IconData icon,
-    required Function()? onTap,
+    required VoidCallback? onTap,
   }) {
-=======
-  Widget _buildCard({String title, Color color, IconData icon, Function onTap}) {
->>>>>>> 84f48cb76deb395e087b55c156fc1b7d8eab821e
     return GestureDetector(
       onTap: onTap,
       child: Card(
@@ -76,7 +72,6 @@ class HomeScreen extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Row(
-<<<<<<< HEAD
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Icon(icon, size: 30, color: Colors.white),
@@ -88,14 +83,6 @@ class HomeScreen extends StatelessWidget {
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
-=======
-            children: [
-              Icon(icon, size: 30, color: Colors.white),
-              SizedBox(width: 20),
-              Text(
-                title,
-                style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
->>>>>>> 84f48cb76deb395e087b55c156fc1b7d8eab821e
               ),
             ],
           ),
