@@ -25,6 +25,7 @@ class _NotesScreenState extends State<NotesScreen> {
     });
   }
 
+<<<<<<< HEAD
   void _goToStudyAssistant() {
     if (notes.isNotEmpty) {
       String allNotes = notes.join(" "); // Concatenating all notes into one string
@@ -38,6 +39,8 @@ class _NotesScreenState extends State<NotesScreen> {
     }
   }
 
+=======
+>>>>>>> 84f48cb76deb395e087b55c156fc1b7d8eab821e
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,7 +57,11 @@ class _NotesScreenState extends State<NotesScreen> {
               decoration: InputDecoration(
                 labelText: 'Enter your note',
                 border: OutlineInputBorder(
+<<<<<<< HEAD
                   borderRadius: BorderRadius.circular(5),
+=======
+                  borderRadius: BorderRadius.circular(15),
+>>>>>>> 84f48cb76deb395e087b55c156fc1b7d8eab821e
                 ),
               ),
             ),
@@ -95,6 +102,7 @@ class _NotesScreenState extends State<NotesScreen> {
                       },
                     ),
             ),
+<<<<<<< HEAD
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: _goToStudyAssistant,
@@ -106,6 +114,8 @@ class _NotesScreenState extends State<NotesScreen> {
               ),
               child: Text('Generate Summary'),
             ),
+=======
+>>>>>>> 84f48cb76deb395e087b55c156fc1b7d8eab821e
           ],
         ),
       ),
