@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../services/api_sevices.dart';
 
+import '../services/api_sevices.dart';
 
 class StudyAssistantScreen extends StatefulWidget {
   @override
@@ -8,28 +8,23 @@ class StudyAssistantScreen extends StatefulWidget {
 }
 
 class _StudyAssistantScreenState extends State<StudyAssistantScreen> {
-  String aiSummary = "AI Summary will appear here...";
-  bool isLoading = false;
-  final ApiService apiService = ApiService(); // Create an instance of ApiService
+  String? _summary = "AI Summary will appear here...";
+  bool _isLoading = false;
 
-  // Function to call AI summary API
-  Future<void> _generateSummary(String notes) async {
+  final String _apiKey = 'https://api.openai.com/v1/completions'; // Place your actual API key here
+
+  void _generateSummary(String notes) async {
     setState(() {
-      isLoading = true;
+      _isLoading = true;
+      _summary = '';
     });
 
-    try {
-      final summary = await apiService.generateSummary(notes);
-      setState(() {
-        aiSummary = summary;
-        isLoading = false;
-      });
-    } catch (e) {
-      setState(() {
-        aiSummary = 'An error occurred: $e';
-        isLoading = false;
-      });
-    }
+    String? summary = await getSummary(_apiKey, notes);
+
+    setState(() {
+      _isLoading = false;
+      _summary = summary ?? 'Failed to generate summary.';
+    });
   }
 
   @override
@@ -41,7 +36,7 @@ class _StudyAssistantScreenState extends State<StudyAssistantScreen> {
         title: Text('AI Study Assistant'),
         centerTitle: true,
       ),
-      body: SingleChildScrollView(
+      body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -51,30 +46,35 @@ class _StudyAssistantScreenState extends State<StudyAssistantScreen> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 10),
-            Text(
-              notes,
-              style: TextStyle(fontSize: 16),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Text(
+                  notes,
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
             ),
             SizedBox(height: 30),
             ElevatedButton(
               onPressed: () {
-                _generateSummary(notes);  // Call the API to generate summary
+                _generateSummary(notes);
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color.fromARGB(255, 68, 255, 84),
+                backgroundColor: Colors.blueAccent,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15),
                 ),
               ),
-              child: Text('Generate AI Summary'),
+              child: _isLoading
+                  ? CircularProgressIndicator(
+                      color: Colors.white,
+                    )
+                  : Text('Generate AI Summary'),
             ),
             SizedBox(height: 20),
-            if (isLoading)
-              Center(child: CircularProgressIndicator()),
-            SizedBox(height: 20),
             Text(
-              aiSummary,  // Display the AI summary
-              style: TextStyle(fontSize: 16, color: Colors.black),
+              _summary!,
+              style: TextStyle(fontSize: 16, color: Colors.grey),
             ),
           ],
         ),
@@ -82,5 +82,3 @@ class _StudyAssistantScreenState extends State<StudyAssistantScreen> {
     );
   }
 }
-
-//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

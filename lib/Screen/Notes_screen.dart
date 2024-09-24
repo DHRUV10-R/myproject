@@ -25,6 +25,16 @@ class _NotesScreenState extends State<NotesScreen> {
     });
   }
 
+  // Function to navigate to the StudyAssistantScreen
+  void _goToStudyAssistantScreen() {
+    String combinedNotes = notes.join(" "); // Combine all notes into a single string
+    Navigator.pushNamed(
+      context,
+      '/studyAssistant',
+      arguments: combinedNotes, // Pass the notes as argument
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,58 +42,85 @@ class _NotesScreenState extends State<NotesScreen> {
         title: Text('Notes'),
         centerTitle: true,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: <Widget>[
-            TextField(
-              controller: _textController,
-              decoration: InputDecoration(
-                labelText: 'Enter your note',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(15),
+      body: Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: <Widget>[
+                TextField(
+                  controller: _textController,
+                  decoration: InputDecoration(
+                    labelText: 'Enter your note',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                  ),
                 ),
-              ),
+                SizedBox(height: 10),
+                Expanded(
+                  child: notes.isEmpty
+                      ? Center(child: Text('No notes yet. Add a note!'))
+                      : ListView.builder(
+                          itemCount: notes.length,
+                          itemBuilder: (context, index) {
+                            return Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              elevation: 3,
+                              child: ListTile(
+                                title: Text(
+                                  notes[index],
+                                  style: TextStyle(fontWeight: FontWeight.w500),
+                                ),
+                                trailing: IconButton(
+                                  icon: Icon(Icons.delete, color: Colors.red),
+                                  onPressed: () => _deleteNoteAtIndex(index),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                ),
+              ],
             ),
-            SizedBox(height: 10),
-            ElevatedButton(
+          ),
+          // Positioned button to add a note
+          Positioned(
+            bottom: 80, // Positioned 80 pixels from the bottom to make space for the new button
+            left: 16,
+            right: 16,
+            child: ElevatedButton(
               onPressed: _addNote,
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.orangeAccent,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15),
                 ),
+                padding: EdgeInsets.symmetric(vertical: 15),
               ),
-              child: Text('Add Note'),
+              child: Text('Add Note', style: TextStyle(fontSize: 16)),
             ),
-            SizedBox(height: 20),
-            Expanded(
-              child: notes.isEmpty
-                  ? Center(child: Text('No notes yet. Add a note!'))
-                  : ListView.builder(
-                      itemCount: notes.length,
-                      itemBuilder: (context, index) {
-                        return Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          elevation: 3,
-                          child: ListTile(
-                            title: Text(
-                              notes[index],
-                              style: TextStyle(fontWeight: FontWeight.w500),
-                            ),
-                            trailing: IconButton(
-                              icon: Icon(Icons.delete, color: Colors.red),
-                              onPressed: () => _deleteNoteAtIndex(index),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
+          ),
+          // Positioned button to navigate to StudyAssistantScreen
+          Positioned(
+            bottom: 20, // Positioned at the bottom
+            left: 16,
+            right: 16,
+            child: ElevatedButton(
+              onPressed: _goToStudyAssistantScreen,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blueAccent,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                padding: EdgeInsets.symmetric(vertical: 15),
+              ),
+              child: Text('Go to Study Assistant', style: TextStyle(fontSize: 16)),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

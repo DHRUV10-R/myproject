@@ -183,13 +183,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               SizedBox(height: 20),
               Text(
-                'Major/Subjects:',
+                'Skills/Subjects:',
                 style: TextStyle(fontSize: 18),
               ),
               TextField(
                 controller: _majorController,
                 decoration: InputDecoration(
-                  hintText: 'Enter your major or key subjects',
+                  hintText: 'Enter your skills or subjects',
                 ),
               ),
               SizedBox(height: 20),
