@@ -7,7 +7,7 @@ Future<String?> getSummary(
   String notes,
 ) async {
   final apiKey =
-      dotenv.env['OPENAI_API_KEY']; // Load API key from environment variable
+      "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"; // Load API key from environment variable
   final url = Uri.parse('https://api.openai.com/v1/completions');
 
   try {
