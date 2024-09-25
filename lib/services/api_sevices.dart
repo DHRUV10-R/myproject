@@ -3,8 +3,11 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-Future<String?> getSummary(String notes,) async {
-  final apiKey = dotenv.env['OPENAI_API_KEY']; // Load API key from environment variable
+Future<String?> getSummary(
+  String notes,
+) async {
+  final apiKey =
+      dotenv.env['OPENAI_API_KEY']; // Load API key from environment variable
   final url = Uri.parse('https://api.openai.com/v1/completions');
 
   try {
@@ -36,10 +39,12 @@ Future<String?> getSummary(String notes,) async {
 }
 
 class ApiService {
-  final String baseUrl = 'https://api.openai.com/v1/completions'; // Corrected API URL
+  final String baseUrl =
+      'https://api.openai.com/v1/completions'; // Corrected API URL
 
   Future<String> generateSummary(String notes) async {
-    final apiKey = dotenv.env['OPENAI_API_KEY']; // Load API key from environment variable
+    final apiKey =
+        dotenv.env['OPENAI_API_KEY']; // Load API key from environment variable
 
     try {
       final response = await http.post(
