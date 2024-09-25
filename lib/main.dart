@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart'; // Add this import for dotenv
+
 import 'Screen/StudyAssistantScreen.dart';
 import 'Screen/Notes_screen.dart';
 import 'Screen/home_screen.dart';
@@ -14,6 +16,7 @@ import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(); // Load .env file
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -60,7 +63,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: "ScholarNexus",
+      title: "Scholar Nexus",
       debugShowCheckedModeBanner: false,
       theme: _isDarkTheme ? ThemeData.dark() : ThemeData.light(),
       home: _auth.currentUser != null
@@ -83,6 +86,7 @@ class _MyAppState extends State<MyApp> {
     );
   }
 }
+
 
 class MyHomePage extends StatefulWidget {
   final Function toggleTheme;

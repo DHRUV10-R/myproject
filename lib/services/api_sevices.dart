@@ -1,11 +1,12 @@
 // lib/api_service.dart
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-
-Future<String?> getSummary(String apiKey, String notes) async {
+Future<String?> getSummary(String notes,) async {
+  final apiKey = dotenv.env['OPENAI_API_KEY']; // Load API key from environment variable
   final url = Uri.parse('https://api.openai.com/v1/completions');
-  
+
   try {
     final response = await http.post(
       url,
@@ -34,18 +35,18 @@ Future<String?> getSummary(String apiKey, String notes) async {
   }
 }
 
-
 class ApiService {
-  final String apiKey = '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'; // Secure this key in production
-  final String baseUrl = 'https://api.openai.com/v1/completionse'; // Update with your API URL
+  final String baseUrl = 'https://api.openai.com/v1/completions'; // Corrected API URL
 
   Future<String> generateSummary(String notes) async {
+    final apiKey = dotenv.env['OPENAI_API_KEY']; // Load API key from environment variable
+
     try {
       final response = await http.post(
         Uri.parse(baseUrl),
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer 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',
+          'Authorization': 'Bearer $apiKey',
         },
         body: jsonEncode({'text': notes}),
       );
@@ -61,4 +62,3 @@ class ApiService {
     }
   }
 }
-//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

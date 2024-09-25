@@ -19,7 +19,7 @@ class _StudyAssistantScreenState extends State<StudyAssistantScreen> {
       _summary = '';
     });
 
-    String? summary = await getSummary(_apiKey, notes);
+    String? summary = await getSummary(_apiKey);
 
     setState(() {
       _isLoading = false;
