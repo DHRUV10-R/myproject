@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class NotesScreen extends StatefulWidget {
   @override
@@ -9,11 +10,32 @@ class _NotesScreenState extends State<NotesScreen> {
   List<String> notes = [];
   final TextEditingController _textController = TextEditingController();
 
+  @override
+  void initState() {
+    super.initState();
+    _loadNotes(); // Load saved notes when the app starts
+  }
+
+  // Load notes from SharedPreferences
+  void _loadNotes() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      notes = prefs.getStringList('notes') ?? [];
+    });
+  }
+
+  // Save notes to SharedPreferences
+  void _saveNotes() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setStringList('notes', notes);
+  }
+
   void _addNote() {
     String noteText = _textController.text;
     if (noteText.isNotEmpty) {
       setState(() {
         notes.add(noteText);
+        _saveNotes(); // Save notes after adding
       });
       _textController.clear();
     }
@@ -22,16 +44,16 @@ class _NotesScreenState extends State<NotesScreen> {
   void _deleteNoteAtIndex(int index) {
     setState(() {
       notes.removeAt(index);
+      _saveNotes(); // Save notes after deletion
     });
   }
 
-  // Function to navigate to the StudyAssistantScreen
   void _goToStudyAssistantScreen() {
-    String combinedNotes = notes.join(" "); // Combine all notes into a single string
+    String combinedNotes = notes.join(" ");
     Navigator.pushNamed(
       context,
       '/studyAssistant',
-      arguments: combinedNotes, // Pass the notes as argument
+      arguments: combinedNotes, // Pass the combined notes as arguments
     );
   }
 

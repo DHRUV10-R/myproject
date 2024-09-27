@@ -23,12 +23,19 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _isObscure = true;
   final _formKey = GlobalKey<FormState>();
   
-  bool _isDarkTheme =false;
+  bool _isDarkTheme = false;
 
   @override
   void initState() {
     super.initState();
     _isDarkTheme = false;
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passController.dispose();
+    super.dispose();
   }
 
   Future<User?> _signIn(
@@ -40,83 +47,100 @@ class _LoginScreenState extends State<LoginScreen> {
       );
 
       User? user = userCredential.user;
-      if (user != null) {
+      if (user != null && mounted) {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => MyHomePage(toggleTheme: _toggleTheme(), showAboutPage: _showAboutPage(), logout: _logout(),),
-        ));
+            builder: (context) => MyHomePage(
+              toggleTheme: () {
+                if (mounted) _toggleTheme();
+              },
+              showAboutPage: () {
+                if (mounted) _showAboutPage();
+              },
+              logout: () {
+                if (mounted) _logout();
+              },
+            ),
+          ),
+        );
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Login Failed, Please check your email and password"),
-        ),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Login Failed, Please check your email and password"),
+          ),
+        );
+      }
     }
     return null;
   }
 
   Future<void> signInWithGoogle() async {
-  try {
-    // Trigger the Google Sign-In flow
-    final GoogleSignInAccount? googleSignInAccount = await googleSignIn.signIn();
+    try {
+      final GoogleSignInAccount? googleSignInAccount = await googleSignIn.signIn();
+      if (googleSignInAccount == null) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Sign in canceled')),
+          );
+        }
+        return;
+      }
 
-    // If the user cancels the sign-in process, return early
-    if (googleSignInAccount == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Sign in canceled')),
+      final GoogleSignInAuthentication googleSignInAuthentication =
+          await googleSignInAccount.authentication;
+
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleSignInAuthentication.accessToken,
+        idToken: googleSignInAuthentication.idToken,
       );
-      return;
+
+      final UserCredential userCredential =
+          await _auth.signInWithCredential(credential);
+
+      final User? user = userCredential.user;
+
+      if (user != null && mounted) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => MyHomePage(
+              toggleTheme: () {
+                if (mounted) _toggleTheme();
+              },
+              showAboutPage: () {
+                if (mounted) _showAboutPage();
+              },
+              logout: () {
+                if (mounted) _logout();
+              },
+            ),
+          ),
+        );
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Sign in successful')),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Sign in failed: $e')),
+        );
+      }
     }
-
-    // Obtain the authentication details from the request
-    final GoogleSignInAuthentication googleSignInAuthentication =
-        await googleSignInAccount.authentication;
-
-    // Create a new credential using the token
-    final AuthCredential credential = GoogleAuthProvider.credential(
-      accessToken: googleSignInAuthentication.accessToken,
-      idToken: googleSignInAuthentication.idToken,
-    );
-
-    // Use the credential to sign in to Firebase
-    final UserCredential userCredential =
-        await _auth.signInWithCredential(credential);
-
-    // Get the signed-in user
-    final User? user = userCredential.user;
-
-    if (user != null) {
-      // If the sign-in was successful, navigate to the home page
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) =>  MyHomePage(toggleTheme: _toggleTheme(), showAboutPage: _showAboutPage(), logout: _logout(),),
-        ),
-      );
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Sign in successful')),
-      );
-    }
-  } catch (e) {
-    // If there is any error, display a message
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Sign in failed: $e')),
-    );
   }
-}
-
 
   @override
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;
 
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 121, 180, 220),
+      backgroundColor: const Color.fromARGB(255, 121, 180, 220),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
+          padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
           child: Form(
             key: _formKey,
             child: Column(
@@ -181,9 +205,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   },
                   rightIcon: TextButton(
                     onPressed: () {
-                      setState(() {
-                        _isObscure = !_isObscure;
-                      });
+                      if (mounted) {
+                        setState(() {
+                          _isObscure = !_isObscure;
+                        });
+                      }
                     },
                     child: Container(
                       alignment: Alignment.center,
@@ -207,10 +233,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     onPressed: () {
                       // Handle forgot password
                     },
-                    child: Text(
+                    child: const Text(
                       "Forgot your password?",
                       style: TextStyle(
-                        color: const Color.fromARGB(255, 7, 74, 241),
+                        color: Color.fromARGB(255, 7, 74, 241),
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
                       ),
@@ -226,7 +252,6 @@ class _LoginScreenState extends State<LoginScreen> {
                           context, _emailController.text, _passController.text);
                     }
                   },
-                  
                 ),
                 SizedBox(height: media.width * 0.1),
                 Row(
@@ -234,13 +259,14 @@ class _LoginScreenState extends State<LoginScreen> {
                     Expanded(
                       child: Container(
                         height: 1,
-                        color: const Color.fromARGB(255, 11, 11, 11).withOpacity(0.5),
+                        color: const Color.fromARGB(255, 11, 11, 11)
+                            .withOpacity(0.5),
                       ),
                     ),
-                    Text(
+                    const Text(
                       "   Or   ",
                       style: TextStyle(
-                        color: const Color.fromARGB(255, 11, 11, 11),
+                        color: Color.fromARGB(255, 11, 11, 11),
                         fontSize: 12,
                         fontWeight: FontWeight.w400,
                       ),
@@ -248,7 +274,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     Expanded(
                       child: Container(
                         height: 1,
-                        color: const Color.fromARGB(255, 11, 11, 11).withOpacity(0.5),
+                        color: const Color.fromARGB(255, 11, 11, 11)
+                            .withOpacity(0.5),
                       ),
                     ),
                   ],
@@ -266,7 +293,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(14),
                           border: Border.all(
-                            color: const Color.fromARGB(255, 2, 2, 2).withOpacity(0.5),
+                            color: const Color.fromARGB(255, 2, 2, 2)
+                                .withOpacity(0.5),
                             width: 1,
                           ),
                         ),
@@ -291,20 +319,22 @@ class _LoginScreenState extends State<LoginScreen> {
                   },
                   child: RichText(
                     textAlign: TextAlign.center,
-                    text: TextSpan(
+                    text: const TextSpan(
                       style: TextStyle(
-                        color: AppColors.blackColor,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
                       ),
                       children: [
-                        TextSpan(text: "Don't have an account? "),
                         TextSpan(
-                          text: "Register",
+                          text: "Don’t have an account? ",
                           style: TextStyle(
-                            color: AppColors.secondary_Color1,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w500,
+                            color: AppColors.blackColor,
+                          ),
+                        ),
+                        TextSpan(
+                          text: "Register Now",
+                          style: TextStyle(
+                            color: AppColors.grayColor,
                           ),
                         ),
                       ],
@@ -319,28 +349,34 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  _toggleTheme() {
-    setState(() {
-      _isDarkTheme = !_isDarkTheme;
-    });
+  void _toggleTheme() {
+    if (mounted) {
+      setState(() {
+        _isDarkTheme = !_isDarkTheme;
+      });
+    }
   }
 
-  _showAboutPage() {
-    showAboutDialog(
-      context: context,
-      applicationName: 'Scholar Nexus',
-      applicationVersion: '1.0.0',
-      applicationIcon: Icon(Icons.school, size: 50),
-      children: [
-        Text(
-          'Scholar Nexus is an interactive learning app that helps students stay organized and engaged.',
-        ),
-      ],
-    );
+  void _showAboutPage() {
+    if (mounted) {
+      showAboutDialog(
+        context: context,
+        applicationName: 'Scholar Nexus',
+        applicationVersion: '1.0.0',
+        applicationIcon: const Icon(Icons.school, size: 50),
+        children: const [
+          Text(
+            'Scholar Nexus is an interactive learning app that helps students stay organized and engaged.',
+          ),
+        ],
+      );
+    }
   }
 
-  _logout() async {
+  void _logout() async {
     await _auth.signOut();
-    Navigator.pushReplacementNamed(context, '/login');
+    if (mounted) {
+      Navigator.pushReplacementNamed(context, '/login');
+    }
   }
 }

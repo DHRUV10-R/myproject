@@ -1,69 +1,70 @@
-// lib/api_service.dart
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+//import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-Future<String?> getSummary(
-  String notes,
-) async {
+// Class to manage API configurations
+class ApiConfig {
+  static const String baseUrl = 'https://api.openai.com/v1/completions';
+  static const String model = "gpt-4o-mini"; // Default model
+}
+
+// Generic API POST request method
+Future<Map<String, dynamic>?> apiPostRequest(
+    String url, Map<String, dynamic> body) async {
   final apiKey =
-      "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"; // Load API key from environment variable
-  final url = Uri.parse('https://api.openai.com/v1/completions');
+      "sk-kEn8On5PejAX2VgamPsgzoemPimZxNzHUvtUaky-AlT3BlbkFJgDZcILsIQELkckz60wYR8bhBmEm9HHa8k6tFtmflkA"; // Load API key from environment variable
 
   try {
     final response = await http.post(
-      url,
+      Uri.parse(url),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $apiKey',
       },
-      body: jsonEncode({
-        "model": "text-davinci-003",
-        "prompt": "Summarize the following text: $notes",
-        "temperature": 0.5,
-        "max_tokens": 150
-      }),
+      body: jsonEncode(body),
     );
 
     if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      return data['choices'][0]['text'].trim();
+      return jsonDecode(response.body);
     } else {
       print('Error: ${response.statusCode} - ${response.body}');
-      return 'An error occurred. Please try again.';
+      return null;
     }
   } catch (e) {
     print('Exception: $e');
-    return 'An error occurred. Please check your network connection.';
+    return null;
   }
 }
 
-class ApiService {
-  final String baseUrl =
-      'https://api.openai.com/v1/completions'; // Corrected API URL
+// Function to create a prompt for summarization
+String createPrompt(String notes) {
+  return "Summarize the following text in a clear and concise manner: $notes";
+}
 
-  Future<String> generateSummary(String notes) async {
-    final apiKey =
-        dotenv.env['OPENAI_API_KEY']; // Load API key from environment variable
+// Function to get a summary using OpenAI API
+Future<String?> getSummary(String notes) async {
+  final url = ApiConfig.baseUrl; // API endpoint
+  final body = {
+    "model": ApiConfig.model,
+    "prompt": createPrompt(notes),
+    "temperature": 0.5,
+    "max_tokens": 150
+  };
 
-    try {
-      final response = await http.post(
-        Uri.parse(baseUrl),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $apiKey',
-        },
-        body: jsonEncode({'text': notes}),
-      );
-
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        return data['summary'];
-      } else {
-        throw Exception('Failed to generate summary');
-      }
-    } catch (e) {
-      throw Exception('An error occurred: $e');
+  try {
+    final response = await apiPostRequest(url, body);
+    if (response != null) {
+      return response['choices'][0]['text'].trim();
+    } else {
+      return 'Failed to get a response from the API.';
     }
+  } catch (e) {
+    print('Error fetching summary: $e');
+    return 'An unexpected error occurred. Please try again later.';
   }
+}
+
+// You can also define a separate class for handling other API-related functions
+class ApiService {
+  // Add other API-related methods here as needed
 }
