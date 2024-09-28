@@ -11,8 +11,8 @@ class ApiConfig {
 // Generic API POST request method
 Future<Map<String, dynamic>?> apiPostRequest(
     String url, Map<String, dynamic> body) async {
-  final apiKey =
-      "sk-kEn8On5PejAX2VgamPsgzoemPimZxNzHUvtUaky-AlT3BlbkFJgDZcILsIQELkckz60wYR8bhBmEm9HHa8k6tFtmflkA"; // Load API key from environment variable
+  final apiKey ='';
+      //"sk-kEn8On5PejAX2VgamPsgzoemPimZxNzHUvtUaky-AlT3BlbkFJgDZcILsIQELkckz60wYR8bhBmEm9HHa8k6tFtmflkA"; // Load API key from environment variable
 
   try {
     final response = await http.post(

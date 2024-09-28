@@ -1,7 +1,4 @@
-// ignore_for_file: unused_import, unused_local_variable
-
-import 'dart:async'; // Import to handle the timer
-import 'dart:math';  // Import for randomization
+import 'dart:async'; 
 import 'package:flutter/material.dart';
 import '../Quiz/question.dart'; // Import the Question class
 
@@ -26,36 +23,24 @@ class _QuizScreenState extends State<QuizScreen> {
   void initState() {
     super.initState();
     _loadQuestions(); // Load questions when the widget is initialized
-    _startTimer();   // Start the timer when the widget is initialized
+    _startTimer(); // Start the timer when the widget is initialized
   }
 
-  // Load sample questions and shuffle them
-  void _loadQuestions() async {
-    final List<Map<String, dynamic>> questionData = [
-      {
-        'questionText': 'What is the capital of France?',
-        'options': ['Paris', 'London', 'Berlin', 'Madrid'],
-        'correctOptionIndex': 0,
-        'category': 'Geography',
-      },
-      {
-        'questionText': 'Which planet is known as the Red Planet?',
-        'options': ['Earth', 'Mars', 'Jupiter', 'Saturn'],
-        'correctOptionIndex': 1,
-        'category': 'Science',
-      },
-      {
-        'questionText': 'Who wrote "Hamlet"?',
-        'options': ['Charles Dickens', 'Mark Twain', 'William Shakespeare', 'Jane Austen'],
-        'correctOptionIndex': 2,
-        'category': 'Literature',
-      },
-    ];
+  // Load questions from the asset file
+  Future<void> _loadQuestions() async {
+    final List<Question> questions = await loadQuestions();
+    if (mounted) {
+      setState(() {
+        _questions = questions; // Assign loaded questions to _questions
+      });
+    }
+  }
 
-    setState(() {
-      _questions = questionData.map((q) => Question.fromMap(q)).toList();
-      _questions.shuffle(); // Shuffle the questions to randomize order
-    });
+  @override
+  void dispose() {
+    // Cancel timers or stop any async operations
+    _timer?.cancel();
+    super.dispose();
   }
 
   // Start or restart the timer
@@ -65,9 +50,11 @@ class _QuizScreenState extends State<QuizScreen> {
       if (_remainingTime == 0) {
         _skipQuestion();
       } else {
-        setState(() {
-          _remainingTime--;
-        });
+        if (mounted) {
+          setState(() {
+            _remainingTime--;
+          });
+        }
       }
     });
   }
@@ -210,6 +197,7 @@ class _QuizScreenState extends State<QuizScreen> {
                       SizedBox(height: 20),
                       ..._questions[_currentQuestionIndex].options.map((option) {
                         int index = _questions[_currentQuestionIndex].options.indexOf(option);
+                        // ignore: unused_local_variable
                         bool isCorrect = _questions[_currentQuestionIndex].correctOptionIndex == index;
 
                         return ElevatedButton(

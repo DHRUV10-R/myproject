@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -11,13 +12,14 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   late User? user = FirebaseAuth.instance.currentUser;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _phoneController = TextEditingController();
   final _schoolController = TextEditingController();
   final _majorController = TextEditingController();
   final _bioController = TextEditingController();
-  String _selectedYear = 'Freshman';
+  String _selectedYear = 'Student'; // Default value
   final ImagePicker _picker = ImagePicker();
   String? _photoUrl;
   bool _isUploading = false;
@@ -29,9 +31,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
       _nameController.text = user!.displayName ?? '';
       _emailController.text = user!.email ?? '';
       _photoUrl = user!.photoURL;
+
+      _loadUserProfile(); // Load data from Firestore
     }
   }
 
+  // Load user profile data from Firestore
+  Future<void> _loadUserProfile() async {
+    DocumentSnapshot userData = await _firestore.collection('users').doc(user!.uid).get();
+
+    if (userData.exists) {
+      setState(() {
+        _nameController.text = userData['name'];
+        _emailController.text = userData['email'];
+        _phoneController.text = userData['phone'];
+        _schoolController.text = userData['school'];
+        _majorController.text = userData['major'];
+        _selectedYear = userData['year'];
+        _bioController.text = userData['bio'];
+        _photoUrl = userData['photoUrl'];
+      });
+    }
+  }
+
+  // Pick and upload image to Firebase Storage
   Future<void> _pickImage() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
 
@@ -72,16 +95,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
+  // Update user profile data in Firebase Auth and Firestore
   Future<void> _updateProfile() async {
     if (user == null) return;
 
     try {
+      // Update Firebase Auth profile info
       await user!.updateProfile(
         displayName: _nameController.text,
         photoURL: _photoUrl,
       );
       await user!.reload();
       user = FirebaseAuth.instance.currentUser;
+
+      // Save data to Firestore
+      await _firestore.collection('users').doc(user!.uid).set({
+        'name': _nameController.text,
+        'email': _emailController.text,
+        'phone': _phoneController.text,
+        'school': _schoolController.text,
+        'major': _majorController.text,
+        'year': _selectedYear,
+        'bio': _bioController.text,
+        'photoUrl': _photoUrl,
+      });
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Profile updated successfully')),
@@ -198,17 +235,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 style: TextStyle(fontSize: 18),
               ),
               DropdownButton<String>(
-                value: _selectedYear,
+                value: _selectedYear.isNotEmpty ? _selectedYear : null,
                 onChanged: (String? newValue) {
                   setState(() {
-                    _selectedYear = newValue!;
+                    _selectedYear = newValue ?? 'Student';
                   });
                 },
                 items: <String>[
-                  'Freshman',
-                  'Sophomore',
-                  'Junior',
-                  'Senior',
+                  'First Year',
+                  'Second Year',
+                  'Third Year',
+                  'Final Year',
                 ].map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
