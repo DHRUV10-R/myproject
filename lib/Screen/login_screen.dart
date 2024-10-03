@@ -4,8 +4,8 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:my_prg/Screen/signup_screen.dart';
 import 'package:my_prg/Widgets/round_gradient_button.dart';
 import 'package:my_prg/Widgets/round_text_field.dart';
-import 'package:my_prg/main.dart';
 import 'package:my_prg/utils/app_colors.dart';
+import 'package:my_prg/main.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -22,14 +22,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _passController = TextEditingController();
   bool _isObscure = true;
   final _formKey = GlobalKey<FormState>();
-  
-  bool _isDarkTheme = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _isDarkTheme = false;
-  }
 
   @override
   void dispose() {
@@ -48,12 +40,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
       User? user = userCredential.user;
       if (user != null && mounted) {
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (context) => MyHomePage(
+              auth: _auth,
               toggleTheme: () {
-                if (mounted) _toggleTheme();
+                // You may need to handle theme toggle here
               },
               showAboutPage: () {
                 if (mounted) _showAboutPage();
@@ -103,12 +96,13 @@ class _LoginScreenState extends State<LoginScreen> {
       final User? user = userCredential.user;
 
       if (user != null && mounted) {
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (context) => MyHomePage(
+              auth: _auth,
               toggleTheme: () {
-                if (mounted) _toggleTheme();
+                // You may need to handle theme toggle here
               },
               showAboutPage: () {
                 if (mounted) _showAboutPage();
@@ -245,11 +239,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 SizedBox(height: media.width * 0.1),
                 RoundGradientButton(
-                  title: "Login",               
+                  title: "Login",
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      _signIn(
-                          context, _emailController.text, _passController.text);
+                      _signIn(context, _emailController.text, _passController.text);
                     }
                   },
                 ),
@@ -259,8 +252,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     Expanded(
                       child: Container(
                         height: 1,
-                        color: const Color.fromARGB(255, 11, 11, 11)
-                            .withOpacity(0.5),
+                        color: const Color.fromARGB(255, 11, 11, 11).withOpacity(0.5),
                       ),
                     ),
                     const Text(
@@ -274,8 +266,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     Expanded(
                       child: Container(
                         height: 1,
-                        color: const Color.fromARGB(255, 11, 11, 11)
-                            .withOpacity(0.5),
+                        color: const Color.fromARGB(255, 11, 11, 11).withOpacity(0.5),
                       ),
                     ),
                   ],
@@ -293,8 +284,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(14),
                           border: Border.all(
-                            color: const Color.fromARGB(255, 2, 2, 2)
-                                .withOpacity(0.5),
+                            color: const Color.fromARGB(255, 2, 2, 2).withOpacity(0.5),
                             width: 1,
                           ),
                         ),
@@ -326,15 +316,15 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       children: [
                         TextSpan(
-                          text: "Don't have an account? ",
+                          text: "Don’t have an account? ",
                           style: TextStyle(
                             color: AppColors.blackColor,
                           ),
                         ),
                         TextSpan(
-                          text: "Register Now",
+                          text: "Sign Up",
                           style: TextStyle(
-                            color: AppColors.grayColor,
+                            color: Color.fromARGB(255, 7, 74, 241),
                           ),
                         ),
                       ],
@@ -349,34 +339,20 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  void _toggleTheme() {
-    if (mounted) {
-      setState(() {
-        _isDarkTheme = !_isDarkTheme;
-      });
-    }
+  void _logout() async {
+    await _auth.signOut();
+    await googleSignIn.signOut();
   }
 
   void _showAboutPage() {
-    if (mounted) {
-      showAboutDialog(
-        context: context,
-        applicationName: 'Scholar Nexus',
-        applicationVersion: '1.0.0',
-        applicationIcon: const Icon(Icons.school, size: 50),
-        children: const [
-          Text(
-            'Scholar Nexus is an interactive learning app that helps students stay organized and engaged.',
-          ),
-        ],
-      );
-    }
-  }
-
-  void _logout() async {
-    await _auth.signOut();
-    if (mounted) {
-      Navigator.pushReplacementNamed(context, '/login');
-    }
+    showAboutDialog(
+      context: context,
+      applicationName: 'My App',
+      applicationVersion: '1.0.0',
+      applicationIcon: const Icon(Icons.info),
+      children: <Widget>[
+        const Text('This is an app for demonstration purposes.'),
+      ],
+    );
   }
 }

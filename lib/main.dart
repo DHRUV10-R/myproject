@@ -1,9 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-//import 'package:flutter_dotenv/flutter_dotenv.dart';
-// Add this import for dotenv
-
+import 'package:shared_preferences/shared_preferences.dart';
 import 'Screen/StudyAssistantScreen.dart';
 import 'Screen/Notes_screen.dart';
 import 'Screen/home_screen.dart';
@@ -19,7 +17,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
-  ); // Initialize Firebase after dotenv
+  );
   runApp(MyApp());
 }
 
@@ -32,9 +30,28 @@ class _MyAppState extends State<MyApp> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   bool _isDarkTheme = false;
 
+  @override
+  void initState() {
+    super.initState();
+    loadThemePreference();
+  }
+
+  Future<void> loadThemePreference() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _isDarkTheme = prefs.getBool('isDarkTheme') ?? false;
+    });
+  }
+
+  Future<void> saveThemePreference() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isDarkTheme', _isDarkTheme);
+  }
+
   void _toggleTheme() {
     setState(() {
       _isDarkTheme = !_isDarkTheme;
+      saveThemePreference();
     });
   }
 
@@ -68,9 +85,11 @@ class _MyAppState extends State<MyApp> {
       theme: _isDarkTheme ? ThemeData.dark() : ThemeData.light(),
       home: _auth.currentUser != null
           ? MyHomePage(
+              auth: _auth,
               toggleTheme: _toggleTheme,
               showAboutPage: _showAboutPage,
-              logout: _logout)
+              logout: _logout,
+            )
           : LoginScreen(),
       routes: {
         '/login': (context) => LoginScreen(),
@@ -88,14 +107,18 @@ class _MyAppState extends State<MyApp> {
 }
 
 class MyHomePage extends StatefulWidget {
+  final FirebaseAuth auth;
   final Function toggleTheme;
   final Function showAboutPage;
   final Function logout;
 
-  MyHomePage(
-      {required this.toggleTheme,
-      required this.showAboutPage,
-      required this.logout});
+  const MyHomePage({
+    super.key,
+    required this.auth,
+    required this.toggleTheme,
+    required this.showAboutPage,
+    required this.logout,
+  });
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -122,7 +145,10 @@ class _MyHomePageState extends State<MyHomePage> {
       widget.toggleTheme();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-            content: Text(_selectedIndex == 0 ? 'Light Theme' : 'Dark Theme')),
+          content: Text(widget.toggleTheme == null
+              ? 'Light Theme'
+              : 'Dark Theme'),
+        ),
       );
     } else if (value == 'About') {
       widget.showAboutPage(context);
@@ -138,18 +164,17 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Scholar Nexus'),
-        leading: TextButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => LoginScreen()),
-            );
-          },
-          child: Text(
-            'Login',
-            style: TextStyle(color: Colors.blue),
-          ),
-        ),
+        leading: widget.auth.currentUser == null
+            ? TextButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, '/login');
+                },
+                child: Text(
+                  'Login',
+                  style: TextStyle(color: Colors.blue),
+                ),
+              )
+            : Container(),
         actions: <Widget>[
           PopupMenuButton<String>(
             onSelected: _onMenuItemSelected,

@@ -37,27 +37,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   // Load user profile data from Firestore
-  Future<void> _loadUserProfile() async {
-    try {
-      DocumentSnapshot userData = await _firestore.collection('users').doc(user!.uid).get();
+Future<void> _loadUserProfile() async {
+  try {
+    DocumentSnapshot userData = await _firestore.collection('users').doc(user!.uid).get();
 
-      if (userData.exists) {
-        setState(() {
-          _nameController.text = userData['name'] ?? '';
-          _emailController.text = userData['email'] ?? '';
-          _phoneController.text = userData['phone'] ?? '';
-          _schoolController.text = userData['school'] ?? '';
-          _majorController.text = userData['major'] ?? '';
-          _selectedYear = userData['year'] ?? 'First Year'; // Default value
-          _bioController.text = userData['bio'] ?? '';
-          _photoUrl = userData['photoUrl'];
-        });
-      }
-    } catch (e) {
-      // Handle error
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error loading profile: $e')));
+    if (userData.exists) {
+      Map<String, dynamic> data = userData.data() as Map<String, dynamic>;  // Convert the snapshot to a map
+      
+      setState(() {
+        _nameController.text = data.containsKey('name') ? data['name'] : '';
+        _emailController.text = data.containsKey('email') ? data['email'] : '';
+        _phoneController.text = data.containsKey('phone') ? data['phone'] : '';
+        _schoolController.text = data.containsKey('school') ? data['school'] : '';
+        _majorController.text = data.containsKey('major') ? data['major'] : '';
+        _selectedYear = data.containsKey('year') ? data['year'] : 'First Year';
+        _bioController.text = data.containsKey('bio') ? data['bio'] : '';
+        _photoUrl = data.containsKey('photoUrl') ? data['photoUrl'] : null;
+      });
     }
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error loading profile: $e')));
   }
+}
+
 
   // Pick and upload image to Firebase Storage
   Future<void> _pickImage() async {
