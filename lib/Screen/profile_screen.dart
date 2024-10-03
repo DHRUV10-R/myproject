@@ -11,7 +11,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  late User? user = FirebaseAuth.instance.currentUser;
+  User? user = FirebaseAuth.instance.currentUser;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
@@ -19,7 +19,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final _schoolController = TextEditingController();
   final _majorController = TextEditingController();
   final _bioController = TextEditingController();
-  String _selectedYear = 'Student'; // Default value
+  String _selectedYear = 'First Year'; // Set a default value
   final ImagePicker _picker = ImagePicker();
   String? _photoUrl;
   bool _isUploading = false;
@@ -38,19 +38,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   // Load user profile data from Firestore
   Future<void> _loadUserProfile() async {
-    DocumentSnapshot userData = await _firestore.collection('users').doc(user!.uid).get();
+    try {
+      DocumentSnapshot userData = await _firestore.collection('users').doc(user!.uid).get();
 
-    if (userData.exists) {
-      setState(() {
-        _nameController.text = userData['name'];
-        _emailController.text = userData['email'];
-        _phoneController.text = userData['phone'];
-        _schoolController.text = userData['school'];
-        _majorController.text = userData['major'];
-        _selectedYear = userData['year'];
-        _bioController.text = userData['bio'];
-        _photoUrl = userData['photoUrl'];
-      });
+      if (userData.exists) {
+        setState(() {
+          _nameController.text = userData['name'] ?? '';
+          _emailController.text = userData['email'] ?? '';
+          _phoneController.text = userData['phone'] ?? '';
+          _schoolController.text = userData['school'] ?? '';
+          _majorController.text = userData['major'] ?? '';
+          _selectedYear = userData['year'] ?? 'First Year'; // Default value
+          _bioController.text = userData['bio'] ?? '';
+          _photoUrl = userData['photoUrl'];
+        });
+      }
+    } catch (e) {
+      // Handle error
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error loading profile: $e')));
     }
   }
 
@@ -67,7 +72,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         final storageRef = FirebaseStorage.instance
             .ref()
             .child('profile_pictures')
-            .child(user!.uid + '.jpg');
+            .child('${user!.uid}.jpg');
         await storageRef.putFile(File(pickedFile.path));
         String downloadUrl = await storageRef.getDownloadURL();
 
@@ -80,17 +85,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
           _isUploading = false;
         });
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Profile picture updated successfully')),
-        );
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Profile picture updated successfully')));
       } catch (e) {
         setState(() {
           _isUploading = false;
         });
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to upload image: $e')),
-        );
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed to upload image: $e')));
       }
     }
   }
@@ -120,13 +121,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
         'photoUrl': _photoUrl,
       });
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Profile updated successfully')),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Profile updated successfully')));
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to update profile: $e')),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed to update profile: $e')));
     }
   }
 
@@ -156,11 +153,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   children: [
                     CircleAvatar(
                       radius: 50,
-                      backgroundImage:
-                          _photoUrl != null ? NetworkImage(_photoUrl!) : null,
-                      child: _photoUrl == null
-                          ? Icon(Icons.person, size: 50)
-                          : null,
+                      backgroundImage: _photoUrl != null ? NetworkImage(_photoUrl!) : null,
+                      child: _photoUrl == null ? Icon(Icons.person, size: 50) : null,
                     ),
                     Positioned(
                       bottom: 0,
@@ -174,71 +168,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
               SizedBox(height: 20),
-              Text(
-                'Name:',
-                style: TextStyle(fontSize: 18),
-              ),
-              TextField(
-                controller: _nameController,
-                decoration: InputDecoration(
-                  hintText: 'Enter your name',
-                ),
-              ),
+              Text('Name:', style: TextStyle(fontSize: 18)),
+              TextField(controller: _nameController, decoration: InputDecoration(hintText: 'Enter your name')),
               SizedBox(height: 20),
-              Text(
-                'Email:',
-                style: TextStyle(fontSize: 18),
-              ),
-              TextField(
-                controller: _emailController,
-                readOnly: true,
-                decoration: InputDecoration(
-                  hintText: 'Your email',
-                ),
-              ),
+              Text('Email:', style: TextStyle(fontSize: 18)),
+              TextField(controller: _emailController, readOnly: true, decoration: InputDecoration(hintText: 'Your email')),
               SizedBox(height: 20),
-              Text(
-                'Phone Number:',
-                style: TextStyle(fontSize: 18),
-              ),
-              TextField(
-                controller: _phoneController,
-                decoration: InputDecoration(
-                  hintText: 'Enter your phone number',
-                ),
-              ),
+              Text('Phone Number:', style: TextStyle(fontSize: 18)),
+              TextField(controller: _phoneController, decoration: InputDecoration(hintText: 'Enter your phone number')),
               SizedBox(height: 20),
-              Text(
-                'School/University:',
-                style: TextStyle(fontSize: 18),
-              ),
-              TextField(
-                controller: _schoolController,
-                decoration: InputDecoration(
-                  hintText: 'Enter your school or university',
-                ),
-              ),
+              Text('School/University:', style: TextStyle(fontSize: 18)),
+              TextField(controller: _schoolController, decoration: InputDecoration(hintText: 'Enter your school or university')),
               SizedBox(height: 20),
-              Text(
-                'Skills/Subjects:',
-                style: TextStyle(fontSize: 18),
-              ),
-              TextField(
-                controller: _majorController,
-                decoration: InputDecoration(
-                  hintText: 'Enter your skills or subjects',
-                ),
-              ),
+              Text('Skills/Subjects:', style: TextStyle(fontSize: 18)),
+              TextField(controller: _majorController, decoration: InputDecoration(hintText: 'Enter your skills or subjects')),
               SizedBox(height: 20),
-              Text(
-                'Year of Study:',
-                style: TextStyle(fontSize: 18),
-              ),
+              Text('Year of Study:', style: TextStyle(fontSize: 18)),
               DropdownButton<String>(
-                value: _selectedYear.isNotEmpty ? _selectedYear : null,
+                value: _selectedYear,
                 onChanged: (String? newValue) {
                   setState(() {
-                    _selectedYear = newValue ?? 'Student';
+                    _selectedYear = newValue ?? 'First Year'; // Default value
                   });
                 },
                 items: <String>[
@@ -254,17 +204,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 }).toList(),
               ),
               SizedBox(height: 20),
-              Text(
-                'Bio:',
-                style: TextStyle(fontSize: 18),
-              ),
-              TextField(
-                controller: _bioController,
-                maxLines: 3,
-                decoration: InputDecoration(
-                  hintText: 'Enter a short bio',
-                ),
-              ),
+              Text('Bio:', style: TextStyle(fontSize: 18)),
+              TextField(controller: _bioController, maxLines: 3, decoration: InputDecoration(hintText: 'Enter a short bio')),
               SizedBox(height: 20),
               Center(
                 child: ElevatedButton(
