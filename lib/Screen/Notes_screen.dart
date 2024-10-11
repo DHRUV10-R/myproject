@@ -17,7 +17,7 @@ class _NotesScreenState extends State<NotesScreen> {
   }
 
   // Load notes from SharedPreferences
-  void _loadNotes() async {
+  Future<void> _loadNotes() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       notes = prefs.getStringList('notes') ?? [];
@@ -25,9 +25,9 @@ class _NotesScreenState extends State<NotesScreen> {
   }
 
   // Save notes to SharedPreferences
-  void _saveNotes() async {
+  Future<void> _saveNotes() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setStringList('notes', notes);
+    await prefs.setStringList('notes', notes);
   }
 
   void _addNote() {
@@ -35,8 +35,8 @@ class _NotesScreenState extends State<NotesScreen> {
     if (noteText.isNotEmpty) {
       setState(() {
         notes.add(noteText);
-        _saveNotes(); // Save notes after adding
       });
+      _saveNotes(); // Save notes after adding
       _textController.clear();
     }
   }
@@ -44,8 +44,8 @@ class _NotesScreenState extends State<NotesScreen> {
   void _deleteNoteAtIndex(int index) {
     setState(() {
       notes.removeAt(index);
-      _saveNotes(); // Save notes after deletion
     });
+    _saveNotes(); // Save notes after deletion
   }
 
   void _goToStudyAssistantScreen() {
@@ -60,6 +60,7 @@ class _NotesScreenState extends State<NotesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.orange,
       appBar: AppBar(
         title: Text('Notes'),
         centerTitle: true,

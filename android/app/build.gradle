@@ -62,11 +62,8 @@ flutter {
 }
 
 // dependencies {
-//   // Import the BoM for the Firebase platform
-//   implementation platform('com.google.firebase:firebase-bom:33.2.0')
-
-//   // Declare the dependencies for the desired Firebase products without specifying versions
-//   // For example, declare the dependencies for Firebase Authentication and Cloud Firestore
-//   implementation 'com.google.firebase:firebase-auth'
-//   implementation 'com.google.firebase:firebase-firestore'
+//     implementation platform('com.google.firebase:firebase-bom:32.2.0') // Use the latest BOM version
+//     implementation 'com.google.firebase:firebase-auth'
+//     implementation 'com.google.android.gms:play-services-auth'
+    
 // }

@@ -5,6 +5,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:8.0.2'
+        classpath 'com.google.gms:google-services:4.3.10' // Google services classpath
         // Add other classpaths here if needed
     }
 }
@@ -15,10 +16,6 @@ allprojects {
         mavenCentral()
     }
 }
-
-// dependencies {
-//     classpath 'com.android.tools.build:gradle:8.0.2'
-// }
 
 rootProject.buildDir = "../build"
 subprojects {

@@ -36,7 +36,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     final media = MediaQuery.of(context).size;
 
     return Scaffold(
-      backgroundColor: AppColors.whiteColor,
+      backgroundColor: const Color.fromARGB(255, 121, 180, 220),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),

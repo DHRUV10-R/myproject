@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 
 class ToDoListScreen extends StatefulWidget {
   @override
@@ -10,12 +12,37 @@ class _ToDoListScreenState extends State<ToDoListScreen> {
   final TextEditingController _textController = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
+  @override
+  void initState() {
+    super.initState();
+    _loadToDoItems();
+  }
+
+  Future<void> _loadToDoItems() async {
+    final prefs = await SharedPreferences.getInstance();
+    final String? toDoItemsJson = prefs.getString('toDoItems');
+
+    if (toDoItemsJson != null) {
+      final List<dynamic> decodedJson = json.decode(toDoItemsJson);
+      setState(() {
+        _toDoItems.addAll(decodedJson.map((item) => ToDoItem.fromJson(item)).toList());
+      });
+    }
+  }
+
+  Future<void> _saveToDoItems() async {
+    final prefs = await SharedPreferences.getInstance();
+    final String encodedData = json.encode(_toDoItems.map((item) => item.toJson()).toList());
+    await prefs.setString('toDoItems', encodedData);
+  }
+
   void _addToDoItem(String task, String priority) {
     if (task.isNotEmpty) {
       setState(() {
         _toDoItems.add(ToDoItem(task, priority));
       });
       _textController.clear();
+      _saveToDoItems(); // Save to persistent storage
     }
   }
 
@@ -23,6 +50,7 @@ class _ToDoListScreenState extends State<ToDoListScreen> {
     setState(() {
       _toDoItems[index].toggleComplete();
     });
+    _saveToDoItems(); // Save updated list
   }
 
   void _removeToDoItem(int index) {
@@ -41,10 +69,12 @@ class _ToDoListScreenState extends State<ToDoListScreen> {
             setState(() {
               _toDoItems.insert(index, removedItem);
             });
+            _saveToDoItems(); // Save updated list
           },
         ),
       ),
     );
+    _saveToDoItems(); // Save updated list after removal
   }
 
   Widget _buildToDoItem(ToDoItem item, int index) {
@@ -127,6 +157,7 @@ class _ToDoListScreenState extends State<ToDoListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.green,
       key: _scaffoldKey,
       appBar: AppBar(
         title: Text('To-Do List'),
@@ -169,5 +200,20 @@ class ToDoItem {
 
   void toggleComplete() {
     isComplete = !isComplete;
+  }
+
+  // Convert ToDoItem to JSON format
+  Map<String, dynamic> toJson() {
+    return {
+      'task': task,
+      'priority': priority,
+      'isComplete': isComplete,
+    };
+  }
+
+  // Create ToDoItem from JSON format
+  factory ToDoItem.fromJson(Map<String, dynamic> json) {
+    return ToDoItem(json['task'], json['priority'])
+      ..isComplete = json['isComplete'];
   }
 }

@@ -45,9 +45,6 @@ class _LoginScreenState extends State<LoginScreen> {
           MaterialPageRoute(
             builder: (context) => MyHomePage(
               auth: _auth,
-              toggleTheme: () {
-                // You may need to handle theme toggle here
-              },
               showAboutPage: () {
                 if (mounted) _showAboutPage();
               },
@@ -101,9 +98,6 @@ class _LoginScreenState extends State<LoginScreen> {
           MaterialPageRoute(
             builder: (context) => MyHomePage(
               auth: _auth,
-              toggleTheme: () {
-                // You may need to handle theme toggle here
-              },
               showAboutPage: () {
                 if (mounted) _showAboutPage();
               },

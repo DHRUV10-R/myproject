@@ -3,12 +3,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
-import 'package:my_prg/main.dart';
 import '../Widgets/add_reminder.dart';
 import '../Widgets/delete_reminder.dart';
 import '../Widgets/switcher.dart';
 import '../services/notification_logic.dart';
 import '../utils/app_colors.dart';
+import 'Notes_screen.dart';
+import 'home_screen.dart';
 
 class ReminderScreen extends StatefulWidget {
   const ReminderScreen({super.key});
@@ -35,18 +36,32 @@ class _ReminderScreenState extends State<ReminderScreen> {
     NotificationLogic.onNotification.listen((value) {});
   }
 
-  void onClickedNotification(String? payload) {
+ void onClickedNotification(String? payload) {
+  // Check the payload to decide which screen to navigate to
+  if (payload == 'notes') {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => MyApp()),
+      MaterialPageRoute(builder: (context) => NotesScreen()), // Replace with your target screen
+    );
+  } else if (payload == 'reminder') {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => ReminderScreen()), // Another example screen
+    );
+  } else {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => HomeScreen()), // Default screen
     );
   }
+}
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
+        backgroundColor: Colors.blueAccent,
         appBar: AppBar(
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
@@ -181,3 +196,4 @@ class _ReminderScreenState extends State<ReminderScreen> {
     );
   }
 }
+

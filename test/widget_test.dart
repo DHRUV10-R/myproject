@@ -8,7 +8,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:my_prg/main.dart';
 
 void main() {
   testWidgets(
@@ -29,6 +28,9 @@ void main() {
         expect(find.text('0'), findsNothing);
         expect(find.text('1'), findsOneWidget);
       } as WidgetTesterCallback);
+}
+
+class MyApp {
 }
 
 class WidgetTester {

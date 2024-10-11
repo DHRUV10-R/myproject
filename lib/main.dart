@@ -1,15 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'Screen/StudyAssistantScreen.dart';
 import 'Screen/Notes_screen.dart';
+import 'Screen/StudyAssistantScreen.dart';
 import 'Screen/home_screen.dart';
-import 'Screen/quiz_screen.dart';
-import 'Screen/reminder.dart';
 import 'Screen/login_screen.dart';
 import 'Screen/news_screen.dart';
 import 'Screen/profile_screen.dart';
+import 'Screen/quiz_screen.dart';
+import 'Screen/reminder.dart';
 import 'Screen/todo_list_screen.dart';
 import 'firebase_options.dart';
 
@@ -33,29 +32,12 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    loadThemePreference();
+    
   }
 
-  Future<void> loadThemePreference() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _isDarkTheme = prefs.getBool('isDarkTheme') ?? false;
-    });
-  }
+  
 
-  Future<void> saveThemePreference() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('isDarkTheme', _isDarkTheme);
-  }
-
-  void _toggleTheme() {
-    setState(() {
-      _isDarkTheme = !_isDarkTheme;
-      saveThemePreference();
-    });
-  }
-
-  void _showAboutPage(BuildContext context) {
+   void _showAboutPage(BuildContext context) {
     showAboutDialog(
       context: context,
       applicationName: 'Scholar Nexus',
@@ -86,7 +68,6 @@ class _MyAppState extends State<MyApp> {
       home: _auth.currentUser != null
           ? MyHomePage(
               auth: _auth,
-              toggleTheme: _toggleTheme,
               showAboutPage: _showAboutPage,
               logout: _logout,
             )
@@ -108,14 +89,12 @@ class _MyAppState extends State<MyApp> {
 
 class MyHomePage extends StatefulWidget {
   final FirebaseAuth auth;
-  final Function toggleTheme;
   final Function showAboutPage;
   final Function logout;
 
   const MyHomePage({
     super.key,
     required this.auth,
-    required this.toggleTheme,
     required this.showAboutPage,
     required this.logout,
   });
@@ -141,16 +120,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _onMenuItemSelected(String value) {
-    if (value == 'Theme') {
-      widget.toggleTheme();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(widget.toggleTheme == null
-              ? 'Light Theme'
-              : 'Dark Theme'),
-        ),
-      );
-    } else if (value == 'About') {
+    if (value == 'About') {
       widget.showAboutPage(context);
     } else if (value == 'Logout') {
       widget.logout(context);
@@ -162,8 +132,11 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      
       appBar: AppBar(
-        title: Text('Scholar Nexus'),
+        backgroundColor: Color.fromARGB(255, 70, 205, 236),
+        title: Text('Scholar Nexus',
+            style: TextStyle(fontWeight: FontWeight.bold)),
         leading: widget.auth.currentUser == null
             ? TextButton(
                 onPressed: () {
@@ -171,7 +144,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 },
                 child: Text(
                   'Login',
-                  style: TextStyle(color: Colors.blue),
+                  style: TextStyle(color: Colors.black),
                 ),
               )
             : Container(),
@@ -180,16 +153,6 @@ class _MyHomePageState extends State<MyHomePage> {
             onSelected: _onMenuItemSelected,
             itemBuilder: (BuildContext context) {
               return [
-                PopupMenuItem<String>(
-                  value: 'Theme',
-                  child: Row(
-                    children: [
-                      Icon(Icons.brightness_6, color: Colors.blue),
-                      SizedBox(width: 10),
-                      Text('Theme'),
-                    ],
-                  ),
-                ),
                 PopupMenuItem<String>(
                   value: 'Profile',
                   child: Row(
@@ -230,9 +193,9 @@ class _MyHomePageState extends State<MyHomePage> {
         child: _widgetOptions[_selectedIndex],
       ),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.grey[900],
-        selectedItemColor: Colors.greenAccent,
-        unselectedItemColor: Colors.grey,
+  backgroundColor: Color.fromARGB(255, 70, 205, 236), // Set background color
+  selectedItemColor: Color.fromARGB(255, 70, 205, 236), // Set selected item color
+  unselectedItemColor: const Color.fromARGB(137, 81, 80, 80),
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home, size: 30),

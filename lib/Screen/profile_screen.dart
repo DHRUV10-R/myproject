@@ -132,6 +132,7 @@ Future<void> _loadUserProfile() async {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 120, 157, 221),
       appBar: AppBar(
         title: Text('Profile'),
         actions: [
