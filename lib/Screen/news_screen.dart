@@ -39,7 +39,7 @@ class _NewsScreenState extends State<NewsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 13, 82, 127),
+      backgroundColor: Color.fromARGB(255, 70, 205, 236),
       appBar: AppBar(
         title: const Text('Top Headlines'),
       ),

@@ -142,7 +142,7 @@ class _QuizScreenState extends State<QuizScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 226, 224, 100),
+      backgroundColor: Color.fromARGB(255, 70, 205, 236),
       body: _questions.isEmpty
           ? Center(
               child: CircularProgressIndicator(),
